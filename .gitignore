@@ -1,1 +1,103 @@
-.idea
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.log
+*.swp
+*.suo
+*.user
+*.userosscache
+*.suo
+*.tmp
+
+# ASP.NET Core
+wwwroot/
+node_modules/
+bower_components/
+*.g.cs
+*.g.i.cs
+*.g.i.cs
+*.g.i.cs
+*.nupkg
+*.snk
+*.suo
+*.user
+*.vs/
+
+# Visual Studio
+.vs/
+*.vscode/
+*.suo
+*.user
+*.userosscache
+*.suo
+*.tmp
+*.ncb
+*.suo
+*.suo
+*.suo
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# JetBrains Rider
+.idea/
+
+# User secrets
+secrets.json
+
+# Log files
+*.log
+
+# Build results
+*.dll
+*.exe
+*.pdb
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+
+# Rider
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# ASP.NET
+project.lock.json
+project.fragment.lock.json
+artifacts/
+MyBooks/obj
+
+# Compiled Code
+*.dll
+*.exe
+
+# Node.js
+node_modules/
+
+# Environment Files
+.env
+
+# Others
+*.db
+*.sqlite
+*.sql
