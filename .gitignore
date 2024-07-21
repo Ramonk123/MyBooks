@@ -102,3 +102,4 @@ node_modules/
 *.sqlite
 *.sql
 MyBooks/bin/
+MyBooks/obj/ 
