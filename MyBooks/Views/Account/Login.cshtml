@@ -1,0 +1,62 @@
+@model MyBooks.Models.Account.LoginVM
+
+@{
+ViewData["HideNavBar"] = true;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MyBooks</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <style>
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .container {
+            max-width: 600px; 
+            margin-top: 50px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-body">
+            <h2>Login</h2>
+            <form method="post" action="/Account/Login">
+                <div class="form-group">
+                    <label for="emailAddress">Email</label>
+                    <input type="email" id="emailAddress" name="EmailAddress" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="Password" class="form-control" required />
+                </div>
+
+                <div class="flex-container mt-3">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <a href="@Url.Action("Register")" class="btn btn-link">No account yet? Register</a>
+                </div>
+
+                @if (ViewData.ModelState.ErrorCount > 0)
+                {
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger"})
+                </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light text-center py-3 mt-5">
+    <p>&copy; 2024 MyBooks</p>
+</footer>
+</body>
+</html>

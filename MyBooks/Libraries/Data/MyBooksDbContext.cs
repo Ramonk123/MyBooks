@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MyBooks.Libraries.Models;
 
-namespace WebApplication1.Libraries.Data;
+namespace MyBooks.Libraries.Data;
 
-public class MyBooksDbContext : DbContext
+public class MyBooksDbContext : IdentityDbContext<User>
 {
     public MyBooksDbContext(DbContextOptions<MyBooksDbContext> options) : base(options)
     {
-        // A4Cj!0:[wpck48jmc15418cn2xcKAH8SD
     }
+    
 }

@@ -1,0 +1,30 @@
+@model IEnumerable<Book>
+
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@book.CoverImageUrl" class="card-img-top" alt="@book.Title" />
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text"><strong>Author:</strong> @book.Author</p>
+                        @if (book.ReadDate.HasValue)
+                        {
+                            <p class="card-text text-success">Read on: @book.ReadDate.Value.ToString("MMMM dd, yyyy")</p>
+                        }
+                        else
+                        {
+                            <p class="card-text text-danger">Not yet read</p>
+                        }
+                        @if (!string.IsNullOrEmpty(book.Review))
+                        {
+                            <p class="card-text"><strong>Review:</strong> @book.Review</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,30 +1,88 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Libraries.Data;
+using MyBooks.Libraries.Data;
+using MyBooks.Libraries.Models;
 
-namespace WebApplication1;
-
-public class Startup
+namespace MyBooks
 {
-    public IConfiguration Configuration { get; }
-
-    public Startup(IConfiguration configuration, IHostEnvironment env)
+    public class Startup
     {
-        var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json");
+        public IConfiguration Configuration { get; }
 
-        if (env.IsDevelopment())
+        public Startup(IConfiguration configuration)
         {
-            builder.AddUserSecrets<Startup>();
+            Configuration = configuration;
         }
 
-        builder.AddEnvironmentVariables();
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<MyBooksDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-        Configuration = builder.Build();
-    }
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequiredUniqueChars = 1;
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<MyBooksDbContext>()
+                .AddDefaultTokenProviders();
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddDbContext<MyBooksDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Align with session expiration
+                options.SlidingExpiration = true; // Ensure the cookie expiration is renewed with each request
+            });
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddControllersWithViews();
+        }
+
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            //app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            // Configure middleware order correctly
+            app.UseRouting();
+
+            // Session must be used before custom middleware
+            app.UseSession();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Overview}/{action=Index}/{id?}");
+            });
+        }
     }
 }

@@ -4,19 +4,22 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>WebApplication1</RootNamespace>
+        <RootNamespace>MyBooks</RootNamespace>
       <UserSecretsId>b12abcc4-b52b-4cf7-879f-7e95b95cba36</UserSecretsId>
   </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="bootstrap" Version="5.3.3" />
+      <PackageReference Include="jQuery" Version="3.7.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Libraries\Models\" />
+      <Folder Include="Middleware\" />
     </ItemGroup>
 
 </Project>
