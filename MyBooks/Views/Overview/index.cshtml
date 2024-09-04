@@ -1,1 +1,14 @@
-<h1>Hello world</h1>
+@using MyBooks.Config
+@using MyBooks.Libraries.Library
+@using MyBooks.Models.Overview
+<div class="container p-3 ">
+    <div class="container d-flex justify-content-center">
+        @Html.Partial("Partials/_BookSearchPartial", new SearchVM()
+            )
+    </div>
+    
+    <div class="container my-books">
+        @Html.Partial("Partials/_MyBooksPartial");
+    </div>
+</div>
+

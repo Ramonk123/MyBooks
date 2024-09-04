@@ -1,0 +1,77 @@
+@model MyBooks.Models.Overview.SearchVM
+
+<div class="container w-100 d-flex justify-content-center align-items-center flex-column mt-4">
+    <h2 class="mb-4">Search Books</h2>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <select id="searchType" class="form-select">
+                <option value="TITLE">Title</option>
+                <option value="AUTHOR">Author</option>
+                <option value="ISBN">ISBN</option>
+            </select>
+        </div>
+        <input type="text" id="searchInput" list="bookTitles" class="form-control" onchange="searchBooks()"/>
+        <datalist id="bookTitles"></datalist>
+        <button class="btn btn-primary" type="button" onclick="searchBooks()">Search</button>
+    </div>
+</div>
+
+<style>
+    .form-select {
+        max-width: 150px;
+    }
+
+    .container h2 {
+        color: #343a40;
+    }
+
+    .input-group-prepend {
+        margin-right: 10px;
+    }
+</style>
+
+<script>
+
+    let currentKeyStrokes = 0;
+    const maxKeyStrokes = 3;
+    
+    async function searchBooks() {
+        const query = document.getElementById('searchInput').value;
+        const searchType = document.getElementById('searchType').value;
+        
+        if (query.trim().length === 0) {
+            currentKeyStrokes = 0;
+        } else {
+            currentKeyStrokes++;
+        }
+        
+        if (currentKeyStrokes % maxKeyStrokes !== 0) {
+            return;
+        }
+        
+
+
+        const response = await fetch('/Overview/Search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({Query: query, SsearchType: searchType })
+        });
+
+        if (response.ok) {
+            const bookTitles = await response.json();
+            const dataList = document.getElementById('bookTitles');
+            dataList.innerHTML = '';
+
+            bookTitles.forEach(title => {
+                const option = document.createElement('option');
+                option.value = title;
+                dataList.appendChild(option);
+            });
+        }
+    }
+
+    document.getElementById('searchInput').addEventListener('input', searchBooks);
+
+</script>

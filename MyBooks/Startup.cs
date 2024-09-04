@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBooks.Libraries.Data;
 using MyBooks.Libraries.Models;
+using MyBooks.Services;
 
 namespace MyBooks
 {
@@ -49,6 +50,8 @@ namespace MyBooks
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddHttpClient();
+            services.AddScoped<OpenLibaryService>();
             services.AddControllersWithViews();
         }
 
@@ -64,7 +67,7 @@ namespace MyBooks
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 

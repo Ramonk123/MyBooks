@@ -1,0 +1,66 @@
+<div class="card w-100 mt-5 my-books-card shadow-sm">
+    <div class="d-flex justify-content-between card-header bg-primary text-white align-items-center">
+        <h3 class="mx-2 mb-0">My Books</h3>
+        <a class="btn btn-outline-light btn-sm mx-2" href="@Url.Action("Index", "Library")">View All</a>
+    </div>
+    <div class="card-body overflow-auto">
+        <div class="list-group">
+            <div class="list-group-item card-item">
+                <div class="d-flex flex-row align-items-center">
+                    <div class="image-container">
+                        <img class="rounded" height="180px" width="120px" src="https://covers.openlibrary.org/b/id/6717853-M.jpg" alt="cover photo">
+                    </div>
+                    <div class="details ml-3 flex-grow-1">
+                        <h5 class="mb-1">Game Of Thrones</h5>
+                        <p class="mb-1">By George R.R. Martin</p>
+                        <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Repeat the card-item block for other books -->
+            <div class="list-group-item card-item">
+                <div class="d-flex flex-row align-items-center">
+                    <div class="image-container">
+                        <img class="rounded" height="180px" width="120px" src="https://covers.openlibrary.org/b/id/6717853-M.jpg" alt="cover photo">
+                    </div>
+                    <div class="details ml-3 flex-grow-1">
+                        <h5 class="mb-1">Game Of Thrones</h5>
+                        <p class="mb-1">By George R.R. Martin</p>
+                        <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more books as necessary -->
+        </div>
+    </div>
+</div>
+
+<style>
+    .my-books-card {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .card-item {
+        border: none;
+        padding: 15px;
+        transition: background-color 0.2s ease;
+    }
+
+    .card-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .card-item img {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+</style>

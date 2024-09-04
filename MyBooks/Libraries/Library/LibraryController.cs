@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBooks.Controllers;
 using MyBooks.Libraries.Data;
+using MyBooks.Models.Library;
 
 namespace MyBooks.Libraries.Library;
 
@@ -22,4 +23,6 @@ public class LibraryController : Controller
     {
         return View("Index");
     }
+
+   
 }
