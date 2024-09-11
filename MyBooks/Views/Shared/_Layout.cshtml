@@ -8,35 +8,112 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/MyBooks.styles.css" asp-append-version="true"/>
 </head>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
 <body>
 
 @if (ViewData["HideNavBar"] == null || !(bool)ViewData["HideNavBar"])
 {
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between p-2">
-            <a class="navbar-brand" href="/">MyBooks</a>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-3">
+        <div class="container-fluid">
+            <!-- Branding -->
+            <a class="navbar-brand font-weight-bold text-primary" href="/">MyBooks</a>
+            
+            <!-- Toggler for mobile view -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item "><a class="nav-link" href="@Url.Action("Index", "Library")">Library</a></li>
-                    <li class="nav-item "><a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Overview")">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Library")">Library</a>
+                    </li>
                 </ul>
-        </nav>
-    </header>
+
+                <!-- Right-aligned actions -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger font-weight-bold" href="@Url.Action("Logout", "Account")">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<style>
+    header {
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+        transition: color 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+        color: #0056b3;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        font-size: 1.1rem;
+        padding: 0.75rem 1rem;
+        color: #343a40;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        background-color: #f1f1f1;
+        color: #007bff;
+        border-radius: 0.5rem;
+    }
+
+    .navbar-nav .nav-link.text-danger {
+        font-weight: bold;
+        color: #dc3545;
+    }
+
+    .navbar-nav .nav-link.text-danger:hover {
+        color: #bd2130;
+    }
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%280, 123, 255, 0.7%29' stroke-width='2' linecap='round' linejoin='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    @@media (max-width: 768px) {
+        .navbar-nav .nav-item {
+            text-align: center;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            font-size: 1.2rem;
+            padding: 1rem;
+        }
+    }
+</style>
 }
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2024 - MyBooks - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>

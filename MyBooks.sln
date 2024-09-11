@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBooks", "MyBooks\MyBooks.csproj", "{FDCDAABF-D710-4B03-AF13-D5AA6E1F9BE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopularityService", "PopularityService\PopularityService.csproj", "{04C037FD-7A9C-411E-AC84-F552736415D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{53A2713D-A123-4399-A61C-7DD368BD3E23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{FDCDAABF-D710-4B03-AF13-D5AA6E1F9BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDCDAABF-D710-4B03-AF13-D5AA6E1F9BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDCDAABF-D710-4B03-AF13-D5AA6E1F9BE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04C037FD-7A9C-411E-AC84-F552736415D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04C037FD-7A9C-411E-AC84-F552736415D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04C037FD-7A9C-411E-AC84-F552736415D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04C037FD-7A9C-411E-AC84-F552736415D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53A2713D-A123-4399-A61C-7DD368BD3E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53A2713D-A123-4399-A61C-7DD368BD3E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53A2713D-A123-4399-A61C-7DD368BD3E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53A2713D-A123-4399-A61C-7DD368BD3E23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

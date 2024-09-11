@@ -14,4 +14,13 @@ public static class Routes
     {
         public static string Base = "/Library";
     }
+
+    public static class Book
+    {
+        public const string Base = "/Books";
+        public const string Details = $"{Base}/Details{{id}}";
+        public const string Popular = $"{Base}/Popular";
+        public const string AddBook = $"{Base}/AddBook/{{libraryId}}";
+
+    }
 }

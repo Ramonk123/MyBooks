@@ -1,66 +1,116 @@
-<div class="card w-100 mt-5 my-books-card shadow-sm">
-    <div class="d-flex justify-content-between card-header bg-primary text-white align-items-center">
-        <h3 class="mx-2 mb-0">My Books</h3>
-        <a class="btn btn-outline-light btn-sm mx-2" href="@Url.Action("Index", "Library")">View All</a>
-    </div>
-    <div class="card-body overflow-auto">
-        <div class="list-group">
-            <div class="list-group-item card-item">
-                <div class="d-flex flex-row align-items-center">
-                    <div class="image-container">
-                        <img class="rounded" height="180px" width="120px" src="https://covers.openlibrary.org/b/id/6717853-M.jpg" alt="cover photo">
-                    </div>
-                    <div class="details ml-3 flex-grow-1">
-                        <h5 class="mb-1">Game Of Thrones</h5>
-                        <p class="mb-1">By George R.R. Martin</p>
-                        <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat the card-item block for other books -->
-            <div class="list-group-item card-item">
-                <div class="d-flex flex-row align-items-center">
-                    <div class="image-container">
-                        <img class="rounded" height="180px" width="120px" src="https://covers.openlibrary.org/b/id/6717853-M.jpg" alt="cover photo">
-                    </div>
-                    <div class="details ml-3 flex-grow-1">
-                        <h5 class="mb-1">Game Of Thrones</h5>
-                        <p class="mb-1">By George R.R. Martin</p>
-                        <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Add more books as necessary -->
+@model MyBooks.Models.Overview.MyBooksVM;
+
+<div class="card w-100 mt-5 my-books-card shadow-lg">
+    <div class="d-flex justify-content-between align-items-center card-header bg-primary text-white">
+        <h3 class="mx-2 mb-0">My Books Collection</h3>
+        <div class="quick-actions">
+            <a href="#" class="btn btn-outline-light btn-sm mx-2 btn-add-book d-flex align-items-center">Add Book</a>
+            <a class="btn btn-outline-light btn-sm mx-2 d-flex align-items-center" href="@Url.Action("Index", "Library")">View All</a>
         </div>
     </div>
+    <input type="hidden" value="@Model.LibraryId" id="library-id" />
+    @if (Model.Books.Count == 0)
+    {
+    <div class="card-body d-flex flex-column align-items-center mt-2">
+        <p class="text-center fs-2">You have no books in your collection.</p>
+        <a href="#" class="btn btn-primary btn-lg btn-add-book mt-3">Add First Book</a>
+    </div>
+    }
+    else
+    {
+    <div class="card-body overflow-auto">
+        <div class="list-group">
+            @foreach (var book in Model.Books)
+            {
+            <div class="list-group-item card-item mb-3">
+                <div class="d-flex flex-row align-items-center">
+                    <div class="image-container p-2">
+                        <img id="thumbnail" class="rounded" height="140px" width="100px" src="@book.ThumbnailUrl" alt="Book Thumbnail" />
+                    </div>
+                    <div class="details ml-3 flex-grow-1">
+                        <h5 class="mb-1">@book.Name</h5>
+                        <p class="mb-1 text-muted">By @book.Author</p>
+                        <div class="d-flex justify-content-between mt-2">
+                            <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
+                            <a href="@book.DetailsUrl" class="btn btn-outline-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
 </div>
+
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
 
 <style>
     .my-books-card {
-        max-height: 80vh;
         overflow-y: auto;
+        border-radius: 0.75rem;
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+        padding: 1rem;
     }
 
     .card-item {
         border: none;
-        padding: 15px;
-        transition: background-color 0.2s ease;
+        padding: 1.5rem;
+        transition: background-color 0.3s ease;
+        border-radius: 0.5rem;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .card-item:hover {
-        background-color: #f8f9fa;
+        background-color: #f1f3f5;
     }
 
-    .card-item img {
+    .image-container img {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
     }
 
-    .list-group-item {
-        border: none;
-        border-bottom: 1px solid #e0e0e0;
+    .image-container img:hover {
+        transform: scale(1.05);
     }
 
-    .list-group-item:last-child {
-        border-bottom: none;
+    .details h5 {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .details .btn-outline-primary {
+        transition: all 0.3s ease;
+    }
+
+    .details .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #ffffff;
+        border-color: #007bff;
+    }
+
+    .btn-add-book {
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-add-book:hover {
+        background-color: #0056b3;
+    }
+
+    .quick-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .quick-actions a {
+        display: inline-flex;
+        align-items: center;
     }
 </style>

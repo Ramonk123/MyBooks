@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="bootstrap" Version="5.3.3" />
+      <PackageReference Include="FontAwesome" Version="4.7.0" />
       <PackageReference Include="jQuery" Version="3.7.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
       <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
@@ -20,7 +21,30 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Libraries\" />
       <Folder Include="Middleware\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\fonts\fontawesome-webfont.eot" />
+      <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
+      <None Include="wwwroot\fonts\fontawesome-webfont.ttf" />
+      <None Include="wwwroot\fonts\fontawesome-webfont.woff" />
+      <None Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+      <None Include="wwwroot\fonts\FontAwesome.otf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Books\Popups\_AddBookPopup.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Shared\Popups\_AddBookPopup.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Data\Data.csproj" />
+      <ProjectReference Include="..\PopularityService\PopularityService.csproj" />
     </ItemGroup>
 
 </Project>

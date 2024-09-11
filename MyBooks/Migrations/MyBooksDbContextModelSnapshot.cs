@@ -154,6 +154,127 @@ namespace MyBooks.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MyBooks.Libraries.Models.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PublicId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Isbn")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("LibraryId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("PublicId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ThumbnailURL")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("LibraryId");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Library", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PublicId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Libraries");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.LibraryBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LibraryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("LibraryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LibraryBooks");
+                });
+
             modelBuilder.Entity("MyBooks.Libraries.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -200,9 +321,6 @@ namespace MyBooks.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
@@ -275,6 +393,81 @@ namespace MyBooks.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Book", b =>
+                {
+                    b.HasOne("MyBooks.Libraries.Models.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyBooks.Libraries.Models.Library", null)
+                        .WithMany("Books")
+                        .HasForeignKey("LibraryId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Library", b =>
+                {
+                    b.HasOne("MyBooks.Libraries.Models.User", "User")
+                        .WithMany("Libraries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.LibraryBook", b =>
+                {
+                    b.HasOne("MyBooks.Libraries.Models.Book", "Book")
+                        .WithMany("LibraryBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyBooks.Libraries.Models.Library", "Library")
+                        .WithMany("LibraryBooks")
+                        .HasForeignKey("LibraryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyBooks.Libraries.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Library");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Author", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Book", b =>
+                {
+                    b.Navigation("LibraryBooks");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.Library", b =>
+                {
+                    b.Navigation("Books");
+
+                    b.Navigation("LibraryBooks");
+                });
+
+            modelBuilder.Entity("MyBooks.Libraries.Models.User", b =>
+                {
+                    b.Navigation("Libraries");
                 });
 #pragma warning restore 612, 618
         }

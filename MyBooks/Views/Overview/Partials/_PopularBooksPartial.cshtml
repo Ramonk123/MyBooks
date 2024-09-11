@@ -1,0 +1,128 @@
+@model List<MyBooks.Models.Overview.PopularBooksVM>
+
+<div class="container mt-5 w-100">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Popular Books</h2>
+        <div class="position-relative">
+            <!-- Wrapper for cards inside a card -->
+            <div class="book-carousel d-flex justify-content-center">
+                <!-- Book card items -->
+                @foreach (var book in Model)
+                {
+                    <div class="card book-card shadow-sm mx-3">
+                        <img src="@book.ThumbnailUrl" class="card-img-top" alt="Book 1">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">@book.Title</h6>
+                            <p class="card-text">@book.Author</p>
+                        </div>
+                    </div> 
+                }
+            </div>
+
+            <button class="btn prev-btn position-absolute start-0 translate-middle-y" onclick="prevSlide()">&#8249;</button>
+            <button class="btn next-btn position-absolute end-0 translate-middle-y" onclick="nextSlide()">&#8250;</button>
+
+            <div class="text-center mt-4">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .book-carousel {
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        white-space: nowrap;
+        transition: transform 0.5s ease;
+    }
+
+    .book-card {
+        width: 180px;
+        height: auto;
+        display: inline-block;
+        border-radius: 10px;
+    }
+
+    .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .btn.prev-btn,
+    .btn.next-btn {
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .btn.prev-btn:hover,
+    .btn.next-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .dot {
+        height: 12px;
+        width: 12px;
+        margin: 0 5px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .dot.active {
+        background-color: #007bff;
+    }
+
+    .position-relative {
+        position: relative;
+        width: 100%;
+    }
+
+    .btn {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .card {
+        border-radius: 12px;
+        background-color: #f8f9fa;
+    }
+
+    .card-title {
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        height: 3rem;
+    }
+
+
+    @@media (max-width: 768px) {
+    .book-card {
+        width: 130px;
+    }
+    .card-img-top {
+        height: 180px;
+    }
+    }
+</style>

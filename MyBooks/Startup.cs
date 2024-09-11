@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MyBooks.Libraries.Data;
 using MyBooks.Libraries.Models;
 using MyBooks.Services;
+using PopularityService;
+
 
 namespace MyBooks
 {
@@ -19,6 +21,10 @@ namespace MyBooks
         {
             services.AddDbContext<MyBooksDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+                services.AddSingleton(new List<BookPopularity>());
+                services.AddSingleton<PopularityQueryService>();
+                services.AddHostedService<PopularityHostedService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
                 {
@@ -49,7 +55,7 @@ namespace MyBooks
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
+            services.AddLogging();
             services.AddHttpClient();
             services.AddScoped<OpenLibaryService>();
             services.AddControllersWithViews();

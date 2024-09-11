@@ -5,10 +5,7 @@ namespace MyBooks.Libraries.Models;
 
 public class User : IdentityUser
 {
-    public Guid PublicId { get; set; }
-    
     [MaxLength(48)]
     public string FullName { get; set; }
-
-
+    public ICollection<Library> Libraries { get; set; }
 }

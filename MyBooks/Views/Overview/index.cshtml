@@ -1,14 +1,154 @@
 @using MyBooks.Config
-@using MyBooks.Libraries.Library
 @using MyBooks.Models.Overview
 <div class="container p-3 ">
     <div class="container d-flex justify-content-center">
-        @Html.Partial("Partials/_BookSearchPartial", new SearchVM()
-            )
+        @Html.Partial("Partials/_BookSearchPartial", new SearchVM())
     </div>
-    
-    <div class="container my-books">
-        @Html.Partial("Partials/_MyBooksPartial");
+    <div class="container d-flex justify-content-center popular-books-container">
     </div>
+    <div class="container my-books"></div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        fetchMyLibrary();
+        fetchPopularBooks();
+    });
+
+    let currentIndex = 0;
+    let totalItems = 0;
+    const visibleItems = 5;
+    let carousel;
+
+    function initializeCarousel() {
+        // Fetch updated elements after popular books are loaded
+        totalItems = document.querySelectorAll('.book-card').length;
+        carousel = document.querySelector('.book-carousel');
+        updateCarousel();
+    }
+
+    function updateCarousel() {
+        if (carousel && totalItems > 0) {
+            const newTranslateX = -(currentIndex * (100 / visibleItems)) + '%';
+            carousel.style.transform = `translateX(${newTranslateX})`;
+            updateDots();
+        }
+    }
+
+    function nextSlide() {
+        if (currentIndex < totalItems - visibleItems) {
+            currentIndex++;
+        } else {
+            currentIndex = 0;
+        }
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = totalItems - visibleItems;
+        }
+        updateCarousel();
+    }
+
+    function currentSlide(index) {
+        currentIndex = index - 1;
+        updateCarousel();
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            if (index === Math.floor(currentIndex / visibleItems)) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function fetchMyLibrary() {
+        fetch('Overview/GetDefaultLibrary/')
+            .then(res => res.text())
+            .then(html => {
+                const myBooksContainer = document.querySelector('.my-books');
+                if (myBooksContainer) {
+                    myBooksContainer.innerHTML = html;
+                    loadModalJavascript();  // Ensure the function is called after the content is loaded
+                } else {
+                    console.error('Error: .my-books container not found');
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    function loadModalJavascript() {
+        const libraryId = document.querySelector("#library-id").value;
+
+        document.removeEventListener('click', handleButtonClick);
+        document.addEventListener('click', handleButtonClick);
+
+        document.removeEventListener('submit', handleFormSubmit);
+        document.addEventListener('submit', handleFormSubmit);
+    }
+
+    function handleButtonClick(event) {
+        const libraryId = document.querySelector("#library-id").value;
+        if (event.target && event.target.classList.contains('btn-add-book')) {
+            fetch('/Library/AddBookPopup/' + libraryId)
+                .then(response => response.text())
+                .then(html => {
+                    const modalContainer = document.createElement('div');
+                    modalContainer.innerHTML = html;
+                    document.body.appendChild(modalContainer);
+
+                    $('#addBookModal').modal('show');
+                }).catch(err => console.error(err));
+        }
+    }
+
+    function fetchPopularBooks() {
+        fetch('@Routes.Book.Popular')
+            .then(res => res.text())
+            .then(html => {
+                const popularBooksContainer = document.querySelector('.popular-books-container');
+                if (popularBooksContainer) {
+                    popularBooksContainer.innerHTML = html;
+
+                    // Reinitialize carousel-related variables and UI
+                    initializeCarousel();
+                } else {
+                    console.error('Error: .popular-books-container not found');
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    function handleFormSubmit(event) {
+        const libraryId = document.querySelector("#library-id").value;
+        if (event.target && event.target.id === 'addBookForm') {
+            event.preventDefault();
+
+            var formData = new FormData(event.target);
+            var actionUrl = event.target.action + '/' + libraryId;
+
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        $('#addBookModal').modal('hide');
+                    } else {
+                        console.error('Error during form submission:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during form submission:', error);
+                });
+        }
+    }
+</script>

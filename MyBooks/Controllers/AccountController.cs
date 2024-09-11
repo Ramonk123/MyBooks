@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBooks.Libraries.Data;
+using MyBooks.Libraries.Data.Enums;
 using MyBooks.Libraries.Models;
 using MyBooks.Models.Account;
 using WebApplication1.Models;
@@ -81,13 +82,25 @@ namespace MyBooks.Controllers
                 Email = data.EmailAddress,
                 UserName = data.Username,
                 FullName = data.FullName,
-                PublicId = Guid.NewGuid()
+            };
+            
+            var defaultLibrary = new Library
+            {
+                PublicId = Guid.NewGuid(),
+                Name = "My Books",
+                Type = LibraryType.DefaultLibrary,
+                User = user,
+                Books = new List<Book>()
             };
 
+            
             var result = await _userManager.CreateAsync(user, data.Password);
 
             if (result.Succeeded)
             {
+                _context.Libraries.Add(defaultLibrary);
+                await _context.SaveChangesAsync();
+                
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Overview");
             }
@@ -96,6 +109,8 @@ namespace MyBooks.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+            
+
 
             return View(data);
         }

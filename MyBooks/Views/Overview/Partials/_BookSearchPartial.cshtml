@@ -1,62 +1,96 @@
 @model MyBooks.Models.Overview.SearchVM
 
-<div class="container w-100 d-flex justify-content-center align-items-center flex-column mt-4">
-    <h2 class="mb-4">Search Books</h2>
-    <div class="input-group mb-3">
+<div class="container search-container w-100 d-flex justify-content-center align-items-center flex-column mt-5">
+    <h2 class="mb-4 text-center">Find Your Next Favorite Book</h2>
+    <div class="input-group mb-3 w-75">
         <div class="input-group-prepend">
-            <select id="searchType" class="form-select">
+            <select id="searchType" class="form-select rounded-start">
                 <option value="TITLE">Title</option>
                 <option value="AUTHOR">Author</option>
                 <option value="ISBN">ISBN</option>
             </select>
         </div>
-        <input type="text" id="searchInput" list="bookTitles" class="form-control" onchange="searchBooks()"/>
+        <input type="text" id="searchInput" list="bookTitles" class="form-control" placeholder="Search by title, author, or ISBN..." onchange="searchBooks()" />
         <datalist id="bookTitles"></datalist>
-        <button class="btn btn-primary" type="button" onclick="searchBooks()">Search</button>
+        <button class="btn btn-primary search-btn" type="button" onclick="searchBooks()">Search</button>
     </div>
 </div>
 
 <style>
-    .form-select {
-        max-width: 150px;
+    .search-container {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .container h2 {
+    .search-container h2 {
+        font-size: 2rem;
+        font-weight: bold;
         color: #343a40;
     }
 
-    .input-group-prepend {
-        margin-right: 10px;
+    .form-select {
+        max-width: 200px;
+        border-radius: 0.25rem 0 0 0.25rem;
     }
+
+    .form-control {
+        border-radius: 0;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+    }
+
+    .search-btn {
+        border-radius: 0 0.25rem 0.25rem 0;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background-color: #0056b3;
+    }
+
+    @@media (max-width: 768px) {
+    .input-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    }
+
+    .form-select, .form-control, .search-btn {
+        border-radius: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+
 </style>
 
 <script>
-
     let currentKeyStrokes = 0;
     const maxKeyStrokes = 3;
-    
+
     async function searchBooks() {
         const query = document.getElementById('searchInput').value;
         const searchType = document.getElementById('searchType').value;
-        
+
         if (query.trim().length === 0) {
             currentKeyStrokes = 0;
         } else {
             currentKeyStrokes++;
         }
-        
+
         if (currentKeyStrokes % maxKeyStrokes !== 0) {
             return;
         }
-        
-
 
         const response = await fetch('/Overview/Search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({Query: query, SsearchType: searchType })
+            body: JSON.stringify({ Query: query, SearchType: searchType })
         });
 
         if (response.ok) {
@@ -73,5 +107,4 @@
     }
 
     document.getElementById('searchInput').addEventListener('input', searchBooks);
-
 </script>
