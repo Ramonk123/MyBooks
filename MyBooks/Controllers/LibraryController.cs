@@ -1,11 +1,13 @@
+using Data.Data;
+using Data.Data.Enums;
+using Data.Models;
+using Data.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyBooks.Libraries.Data;
-using MyBooks.Libraries.Data.Enums;
-using MyBooks.Libraries.Models;
-using MyBooks.Libraries.Queries;
+using MyBooks.Config;
+using MyBooks.Models.Library;
 using MyBooks.Models.Overview;
 
 namespace MyBooks.Controllers;
@@ -29,9 +31,48 @@ public class LibraryController : Controller
         _userManager = userManager;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View("Index");
+        var userId = _userManager.GetUserId(User);
+
+        if (userId == null)
+        {
+            return BadRequest();
+        }
+        
+        var libraries = await  _context.Libraries
+            .WhereUserIs(userId)
+            .Select(l => new LibraryVM
+            {
+                LibraryId = l.PublicId,
+                Name = l.Name,
+                Books = l.LibraryBooks.Select(lb => new LibraryBookVM
+                {
+                    BookId = lb.Book.PublicId,
+                    AuthorId = lb.Book.Author.PublicId,
+                    Title = lb.Book.Title,
+                    Author = lb.Book.Author.Name,
+                    Status = lb.Status.ToString(),
+                    ThumbnailURL = lb.Book.ThumbnailURL
+                }).ToList()
+            })
+            .ToListAsync();
+
+        var defaultLibrary = libraries
+            .SingleOrDefault(l => l.Type == LibraryType.DefaultLibrary);
+
+        if (defaultLibrary == null)
+        {
+            return BadRequest("Default library not found");
+        }
+        
+        
+        
+        return View("Index", new LibraryIndexVM
+        {
+            DefaultLibrary = defaultLibrary,
+            Libraries = libraries
+        });
     }
 
     [HttpGet("Library/AddBookPopup/{libraryId}")]
@@ -42,7 +83,7 @@ public class LibraryController : Controller
 
     public async Task<Library> GetMyBooksLibrary()
     {
-        var user = this.User;
+        var user = User;
         var userId = _userManager.GetUserId(user);
         
         if (userId == null)
@@ -58,4 +99,26 @@ public class LibraryController : Controller
         
         return library;
     }
+    
+    // [HttpPost(Routes.Library.AddLibrary)]
+    // public async Task<IActionResult> AddLibrary([FromBody] AddLibraryVM model)
+    // {
+    //     var user = await _userManager.GetUserAsync(User);
+    //     if (user == null)
+    //     {
+    //         return BadRequest();
+    //     }
+    //
+    //     var library = new Library
+    //     {
+    //         Name = model.Name,
+    //         Type = LibraryType.CustomLibrary,
+    //         UserId = user.Id
+    //     };
+    //
+    //     await _context.Libraries.AddAsync(library);
+    //     await _context.SaveChangesAsync();
+    //
+    //     return Ok();
+    // }
 }

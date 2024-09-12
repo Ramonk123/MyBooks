@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace MyBooks.Libraries.Models;
+namespace Data.Models;
 
 public class User : IdentityUser
 {

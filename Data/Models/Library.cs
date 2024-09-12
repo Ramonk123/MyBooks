@@ -1,6 +1,6 @@
-using MyBooks.Libraries.Data.Enums;
+using Data.Data.Enums;
 
-namespace MyBooks.Libraries.Models;
+namespace Data.Models;
 
 public class Library
 {

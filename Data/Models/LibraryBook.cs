@@ -1,4 +1,6 @@
-namespace MyBooks.Libraries.Models;
+using Data.Data.Enums;
+
+namespace Data.Models;
 
 public class LibraryBook
 {
@@ -12,4 +14,6 @@ public class LibraryBook
     
     public int BookId { get; set; }
     public virtual Book Book { get; set; }
+    
+    public BookStatus Status { get; set; }
 }

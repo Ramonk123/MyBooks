@@ -1,14 +1,15 @@
+using Data.Data;
+using Data.Data.Enums;
+using Data.Models;
+using Data.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
-using MyBooks.Libraries.Data;
-using MyBooks.Libraries.Data.Enums;
-using MyBooks.Libraries.Models;
-using MyBooks.Libraries.Queries;
 using MyBooks.Models.Overview;
 using MyBooks.Services;
+using MyBooks.Services.Data.Enums;
 using PopularityService;
 
 namespace MyBooks.Controllers;
@@ -54,7 +55,35 @@ public class OverviewController : Controller
             return Ok();
         }
 
-        var result = await _openLibraryService.Query(model.Query, model.SearchType);
+        object result = null;
+
+        switch (model.SearchType)
+        {
+            case SearchTypes.TITLE:
+                result = await _context.Books
+                    .Where(b => b.Title.Contains(model.Query))
+                    .Select(b => new BookVM
+                    {
+                        Name = b.Title,
+                        Author = b.Author.Name,
+                        PublicId = b.PublicId,
+                        ISBN = b.Isbn,
+                        ThumbnailUrl = b.ThumbnailURL,
+                        DetailsUrl = Url.Action("Details", "Books", new { id = b.PublicId })
+                    })
+                    .ToListAsync();
+                break;
+            case SearchTypes.AUTHOR:
+                result = await _context.Authors
+                    .Where(a => a.Name.Contains(model.Query))
+                    .Select(a => new
+                    {
+                        Name = a.Name,
+                        Id = a.PublicId
+                    })
+                    .ToListAsync();
+                break;
+        }
 
         return Json(result);
     }
@@ -83,7 +112,7 @@ public class OverviewController : Controller
                     ThumbnailUrl = lb.Book.ThumbnailURL,
                     DetailsUrl =
                         Url.Action("Details", "Books", new { id = lb.Book.PublicId }) // Ensure this is correctly set
-                }).ToList() ?? new List<BookVM>()
+                }).ToList() 
             })
             .FirstOrDefaultAsync();
 

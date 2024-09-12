@@ -1,4 +1,4 @@
-namespace MyBooks.Libraries.Data.Enums;
+namespace Data.Data.Enums;
 
 public enum LibraryType
 {

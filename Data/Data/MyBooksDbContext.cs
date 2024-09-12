@@ -1,8 +1,8 @@
+using Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyBooks.Libraries.Models;
 
-namespace MyBooks.Libraries.Data;
+namespace Data.Data;
 
 public class MyBooksDbContext : IdentityDbContext<User>
 {

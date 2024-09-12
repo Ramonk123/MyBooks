@@ -1,7 +1,7 @@
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using MyBooks.Libraries.Models;
 
-namespace MyBooks.Libraries.Queries;
+namespace Data.Queries;
 
 public static class AuthorQueryExtensions
 {

@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using MyBooks.Libraries.Models;
+using Data.Models;
 
-namespace MyBooks.Libraries.Queries;
+namespace Data.Queries;
 
 public static class BookQueryExtensions
 {

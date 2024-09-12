@@ -1,4 +1,4 @@
-namespace MyBooks.Libraries.Models;
+namespace Data.Models;
 
 public class Book
 {
@@ -7,7 +7,10 @@ public class Book
     public string Isbn { get; set; }
 
     public string Title { get; set; }
+    public string? Subtitle { get; set; }
     public string Description { get; set; }
+    public string? ReleaseYear { get; set; }
+    public double? AverageRating { get; set; }
 
     public int AuthorId { get; set; }
     public Author Author { get; set; }

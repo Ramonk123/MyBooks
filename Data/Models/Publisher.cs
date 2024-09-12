@@ -1,4 +1,4 @@
-namespace MyBooks.Libraries.Models;
+namespace Data.Models;
 
 public class Publisher
 {

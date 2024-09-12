@@ -1,10 +1,10 @@
+using Data.Data;
+using Data.Models;
+using Data.Queries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
-using MyBooks.Libraries.Data;
-using MyBooks.Libraries.Models;
-using MyBooks.Libraries.Queries;
 using MyBooks.Models.Book;
 using PopularityService;
 

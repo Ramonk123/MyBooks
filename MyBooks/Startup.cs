@@ -1,7 +1,7 @@
+using Data.Data;
+using Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyBooks.Libraries.Data;
-using MyBooks.Libraries.Models;
 using MyBooks.Services;
 using PopularityService;
 
@@ -20,7 +20,8 @@ namespace MyBooks
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MyBooksDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("Data")));
 
                 services.AddSingleton(new List<BookPopularity>());
                 services.AddSingleton<PopularityQueryService>();

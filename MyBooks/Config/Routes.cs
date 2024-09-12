@@ -4,15 +4,16 @@ public static class Routes
 {
     public static class Account
     {
-        public static string Base = "/Account";
-        public static string Login = $"{Base}/Login";
-        public static string Register = $"{Base}/Register";
-        public static string Logout = $"{Base}/Logout";
+        public const string Base = "/Account";
+        public const string Login = $"{Base}/Login";
+        public const string Register = $"{Base}/Register";
+        public const string Logout = $"{Base}/Logout";
     }
 
     public static class Library
     {
-        public static string Base = "/Library";
+        public const string Base = "/Library";
+        public const string AddLibrary = $"{Base}/Add";
     }
 
     public static class Book
