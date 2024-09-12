@@ -10,18 +10,39 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        fetchMyLibrary();
-        fetchPopularBooks();
+    $(document).ready(async function() {
+        await fetchMyLibrary();
+        await fetchPopularBooks();
+        initializeSearchbar();
     });
 
     let currentIndex = 0;
     let totalItems = 0;
     const visibleItems = 5;
     let carousel;
+    
+    function filterBooks() {
+        const searchInput = document.querySelector('#search-book-input');
+        const searchValue = searchInput.value.toLowerCase();
+        const bookItems = document.querySelectorAll('.my-book-card');
+
+        bookItems.forEach(book => {
+            const bookName = book.querySelector('.book-name').textContent.toLowerCase();
+            const bookAuthor = book.querySelector('.book-author').textContent.toLowerCase();
+            if (bookName.includes(searchValue) || bookAuthor.includes(searchValue)) {
+                book.style.display = 'block';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    }
+    
+    function initializeSearchbar() {
+        const searchInput = document.querySelector('#search-book-input');
+        searchInput.addEventListener('input', filterBooks);
+    }
 
     function initializeCarousel() {
-        // Fetch updated elements after popular books are loaded
         totalItems = document.querySelectorAll('.book-card').length;
         carousel = document.querySelector('.book-carousel');
         updateCarousel();
@@ -69,8 +90,8 @@
         });
     }
 
-    function fetchMyLibrary() {
-        fetch('Overview/GetDefaultLibrary/')
+    async function fetchMyLibrary() {
+        return fetch('Overview/GetDefaultLibrary/')
             .then(res => res.text())
             .then(html => {
                 const myBooksContainer = document.querySelector('.my-books');
@@ -84,9 +105,9 @@
             .catch(error => console.error(error));
     }
 
-    function loadModalJavascript() {
-        const libraryId = document.querySelector("#library-id").value;
 
+
+    function loadModalJavascript() {
         document.removeEventListener('click', handleButtonClick);
         document.addEventListener('click', handleButtonClick);
 
@@ -109,16 +130,13 @@
         }
     }
 
-    function fetchPopularBooks() {
+    async function fetchPopularBooks() {
         fetch('@Routes.Book.Popular')
             .then(res => res.text())
             .then(html => {
                 const popularBooksContainer = document.querySelector('.popular-books-container');
                 if (popularBooksContainer) {
                     popularBooksContainer.innerHTML = html;
-
-                    // Reinitialize carousel-related variables and UI
-                    initializeCarousel();
                 } else {
                     console.error('Error: .popular-books-container not found');
                 }

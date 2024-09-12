@@ -26,6 +26,13 @@ public class BooksController : Controller
         _logger = logger;
     }
 
+    
+    public IActionResult Index([FromQuery] string? q)
+    {
+        ViewBag.Query = q;
+        return View("Index");
+    }
+
     [HttpPost(Routes.Book.AddBook)]
     public async Task<IActionResult> AddBook([FromForm] AddBookVM model, Guid libraryId)
     {
@@ -114,5 +121,23 @@ public class BooksController : Controller
         }
 
         return View("Details", book);
+    }
+    
+    [HttpGet(Routes.Book.Search)]
+    public async Task<List<SearchResultVM>> Search([FromRoute] string query)
+    {
+        var results = await _context.Books
+            .WhereTitleLike(query)
+            .Select(b => new SearchResultVM
+            {
+                Author = b.Author.Name,
+                AuthorId = b.Author.PublicId,
+                BookId = b.PublicId,
+                Title = b.Title,
+                ThumbnailURL = b.ThumbnailURL
+            })
+            .ToListAsync();
+
+        return results;
     }
 }

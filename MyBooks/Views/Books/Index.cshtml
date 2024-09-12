@@ -1,0 +1,225 @@
+@{
+var query = ViewBag.Query as string;
+}
+<div class="search-container">
+    <input type="text" id="search-book-input" placeholder="Search for a book..." onchange="searchBook()">
+
+    <div class="results">
+        <!-- Search results will be appended here -->
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#search-book-input').on('input', handleInput);
+
+        const query = '@query';
+        if (query) {
+            $('#search-book-input').val(query);
+            searchBook(query);
+        }
+    });
+
+    let bookList = [];
+    let debounceTimeout = null;
+
+    // Handle input with debounce
+    function handleInput(event) {
+        const searchValue = $('#search-book-input').val();
+
+        // Ignore certain keypresses like backspace, arrow keys, etc.
+        if (event.key === 'Backspace' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            return;
+        }
+
+        // If input is empty, clear results
+        if (searchValue.length === 0) {
+            emptyBookList();
+            return;
+        }
+
+        // Debounce the query - only fire the request if the user hasn't typed for 300ms
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => searchBook(searchValue), 300);
+    }
+
+    function searchBook(query) {
+        const searchValue = query || $('#search-book-input').val();
+        console.log(searchValue);
+        if (searchValue.length === 0) {
+            emptyBookList();
+            return;
+        }
+        if (searchValue.length < 3) {
+            return;
+        }
+
+        $.ajax({
+            url: '/Books/Search/' + searchValue,
+            type: 'GET',
+            success: function (data) {
+                const existingBookIds = new Set(bookList.map(book => book.bookId));
+
+                data.forEach(book => {
+                    if (!existingBookIds.has(book.bookId)) {
+                        bookList.push(book);
+                    }
+                });
+
+                updateDOM();
+            },
+            error: function () {
+                const results = $('.results');
+                results.empty();
+                results.append('<p>No books found.</p>');
+            }
+        });
+    }
+
+    function updateDOM() {
+        const results = $('.results');
+        results.empty();
+
+        bookList.forEach(book => {
+            const card = $('<div class="card"></div>').data('book-id', book.bookId);
+
+            const thumbnail = book.thumbnailURL
+                ? `<img src="${book.thumbnailURL}" alt="${book.title} thumbnail" class="book-thumbnail" loading="lazy">`
+                : '<img src="placeholder.jpg" alt="placeholder image" class="book-thumbnail">';
+
+            const averageRating = book.averageRating || "N/A";
+            const releaseYear = book.releaseYear || "Unknown";
+            const subtitle = book.subtitle || "";
+            const description = book.description ? book.description.substring(0, 150) + "..." : "No description available.";
+
+            const title = $(`<h2 class="book-title">${book.title}</h2>`);
+            const subtitleElement = subtitle ? $(`<h3 class="book-subtitle">${subtitle}</h3>`) : '';
+            const author = $(`<p class="book-author">By: ${book.author}</p>`);
+            const releaseYearElement = $(`<p class="release-year">Published: ${releaseYear}</p>`);
+            const rating = $(`<p class="book-rating">Rating: ${averageRating}</p>`);
+            const descriptionElement = $(`<p class="book-description">${description}</p>`);
+
+            card.append(thumbnail);
+            const textContainer = $('<div class="text-container"></div>');
+            textContainer.append(title);
+            if (subtitleElement) textContainer.append(subtitleElement);
+            textContainer.append(author);
+            textContainer.append(releaseYearElement);
+            textContainer.append(rating);
+            textContainer.append(descriptionElement);
+
+            card.append(textContainer);
+            results.append(card);
+        });
+    }
+
+    function emptyBookList() {
+        bookList = [];
+        updateDOM();
+    }
+</script>
+
+<style>
+    /* Container for search bar and results */
+    .search-container {
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Results styling */
+    .results {
+        margin-top: 20px;
+    }
+
+    /* Card styling */
+    .card {
+        display: flex;
+        padding: 20px;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+        overflow: hidden;
+    }
+
+    /* Image styling */
+    .book-thumbnail {
+        width: 120px;
+        height: 180px;
+        object-fit: cover;
+        margin-right: 20px;
+        border-radius: 4px;
+    }
+
+    /* Hover effect */
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    /* Text container inside the card */
+    .text-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Book title styling */
+    .book-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0 0 10px;
+        color: #333;
+    }
+
+    /* Book subtitle styling */
+    .book-subtitle {
+        font-size: 16px;
+        font-weight: normal;
+        color: #666;
+        margin: 0 0 10px;
+    }
+
+    /* Book author styling */
+    .book-author {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    /* Release year styling */
+    .release-year {
+        font-size: 12px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    /* Book rating styling */
+    .book-rating {
+        font-size: 14px;
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 10px;
+    }
+
+    /* Book description styling */
+    .book-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+        margin-top: 10px;
+    }
+
+    /* Input field styling */
+    #search-book-input {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 18px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+</style>

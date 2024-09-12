@@ -3,14 +3,7 @@
 <div class="container search-container w-100 d-flex justify-content-center align-items-center flex-column mt-5">
     <h2 class="mb-4 text-center">Find Your Next Favorite Book</h2>
     <div class="input-group mb-3 w-75">
-        <div class="input-group-prepend">
-            <select id="searchType" class="form-select rounded-start">
-                <option value="TITLE">Title</option>
-                <option value="AUTHOR">Author</option>
-                <option value="ISBN">ISBN</option>
-            </select>
-        </div>
-        <input type="text" id="searchInput" list="bookTitles" class="form-control" placeholder="Search by title, author, or ISBN..." onchange="searchBooks()" />
+        <input type="text" id="searchInput" list="bookTitles" class="form-control"/>
         <datalist id="bookTitles"></datalist>
         <button class="btn btn-primary search-btn" type="button" onclick="searchBooks()">Search</button>
     </div>
@@ -64,47 +57,18 @@
         border-radius: 0.25rem;
         margin-bottom: 0.5rem;
     }
-
 </style>
 
 <script>
     let currentKeyStrokes = 0;
     const maxKeyStrokes = 3;
 
-    async function searchBooks() {
+    function searchBooks() {
         const query = document.getElementById('searchInput').value;
-        const searchType = document.getElementById('searchType').value;
 
         if (query.trim().length === 0) {
-            currentKeyStrokes = 0;
-        } else {
-            currentKeyStrokes++;
-        }
-
-        if (currentKeyStrokes % maxKeyStrokes !== 0) {
             return;
         }
-
-        const response = await fetch('/Overview/Search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ Query: query, SearchType: searchType })
-        });
-
-        if (response.ok) {
-            const bookTitles = await response.json();
-            const dataList = document.getElementById('bookTitles');
-            dataList.innerHTML = '';
-
-            bookTitles.forEach(title => {
-                const option = document.createElement('option');
-                option.value = title;
-                dataList.appendChild(option);
-            });
-        }
+        window.location.href = '@Url.Action("Index", "Books")?q=' + query;
     }
-
-    document.getElementById('searchInput').addEventListener('input', searchBooks);
 </script>

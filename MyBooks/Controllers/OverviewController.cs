@@ -54,95 +54,78 @@ public class OverviewController : Controller
         {
             return Ok();
         }
-
-        object result = null;
-
-        switch (model.SearchType)
-        {
-            case SearchTypes.TITLE:
-                result = await _context.Books
-                    .Where(b => b.Title.Contains(model.Query))
-                    .Select(b => new BookVM
-                    {
-                        Name = b.Title,
-                        Author = b.Author.Name,
-                        PublicId = b.PublicId,
-                        ISBN = b.Isbn,
-                        ThumbnailUrl = b.ThumbnailURL,
-                        DetailsUrl = Url.Action("Details", "Books", new { id = b.PublicId })
-                    })
-                    .ToListAsync();
-                break;
-            case SearchTypes.AUTHOR:
-                result = await _context.Authors
-                    .Where(a => a.Name.Contains(model.Query))
-                    .Select(a => new
-                    {
-                        Name = a.Name,
-                        Id = a.PublicId
-                    })
-                    .ToListAsync();
-                break;
-        }
-
-        return Json(result);
-    }
-
-    public async Task<IActionResult> GetDefaultLibrary()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return BadRequest();
-        }
-
-        var library = await _context.Libraries
-            .WhereUserIs(user.Id)
-            .WhereTypeIs(LibraryType.DefaultLibrary)
-            .Select(l => new MyBooksVM
+        
+        var result = await _context.Books
+            .Where(b => b.Title.Contains(model.Query))
+            .Select(b => new BookVM
             {
-                LibraryId = l.PublicId,
-                LibraryName = l.Name,
-                Books = l.LibraryBooks.Select(lb => new BookVM
-                {
-                    Name = lb.Book.Title,
-                    Author = lb.Book.Author.Name,
-                    PublicId = lb.Book.PublicId,
-                    ISBN = lb.Book.Isbn,
-                    ThumbnailUrl = lb.Book.ThumbnailURL,
-                    DetailsUrl =
-                        Url.Action("Details", "Books", new { id = lb.Book.PublicId }) // Ensure this is correctly set
-                }).ToList() 
+                Name = b.Title,
+                Author = b.Author.Name,
+                PublicId = b.PublicId,
+                ISBN = b.Isbn,
+                ThumbnailUrl = b.ThumbnailURL,
+                DetailsUrl = Url.Action("Details", "Books", new { id = b.PublicId })
             })
-            .FirstOrDefaultAsync();
+            .ToListAsync();
+    return Json(result);
+}
 
-        if (library == null)
-        {
-            _logger.LogError($"User with id: {user.Id} does not have a default library");
-            return BadRequest();
-        }
-
-        return PartialView("Partials/_MyBooksPartial", library);
-    }
-
-    [HttpGet(Routes.Book.Popular)]
-    public IActionResult GetPopularBooks()
+public async Task<IActionResult> GetDefaultLibrary()
+{
+    var user = await _userManager.GetUserAsync(User);
+    if (user == null)
     {
-        var popularBooks = _popularityService.GetPopularBooks().Select(pb => new PopularBooksVM
-        {
-            Author = pb.Author,
-            AuthorId = pb.AuthorId,
-            BookId = pb.BookId,
-            PopularityScore = pb.PopularityScore,
-            Title = pb.Title,
-            ThumbnailUrl = pb.ThumbnailUrl // Ensure this property is included
-        }).ToList();
-
-        if (popularBooks == null || !popularBooks.Any())
-        {
-            return PartialView("Partials/_PopularBooksPartial", new List<PopularBooksVM>());
-        }
-
-        return PartialView("Partials/_PopularBooksPartial", popularBooks);
+        return BadRequest();
     }
+
+    var library = await _context.Libraries
+        .WhereUserIs(user.Id)
+        .WhereTypeIs(LibraryType.DefaultLibrary)
+        .Select(l => new MyBooksVM
+        {
+            LibraryId = l.PublicId,
+            LibraryName = l.Name,
+            Books = l.LibraryBooks.Select(lb => new BookVM
+            {
+                Name = lb.Book.Title,
+                Author = lb.Book.Author.Name,
+                PublicId = lb.Book.PublicId,
+                ISBN = lb.Book.Isbn,
+                ThumbnailUrl = lb.Book.ThumbnailURL,
+                DetailsUrl =
+                    Url.Action("Details", "Books", new { id = lb.Book.PublicId }) // Ensure this is correctly set
+            }).ToList()
+        })
+        .FirstOrDefaultAsync();
+
+    if (library == null)
+    {
+        _logger.LogError($"User with id: {user.Id} does not have a default library");
+        return BadRequest();
+    }
+
+    return PartialView("Partials/_MyBooksPartial", library);
+}
+
+[HttpGet(Routes.Book.Popular)]
+public IActionResult GetPopularBooks()
+{
+    var popularBooks = _popularityService.GetPopularBooks().Select(pb => new PopularBooksVM
+    {
+        Author = pb.Author,
+        AuthorId = pb.AuthorId,
+        BookId = pb.BookId,
+        PopularityScore = pb.PopularityScore,
+        Title = pb.Title,
+        ThumbnailUrl = pb.ThumbnailUrl // Ensure this property is included
+    }).ToList();
+
+    if (popularBooks == null || !popularBooks.Any())
+    {
+        return PartialView("Partials/_PopularBooksPartial", new List<PopularBooksVM>());
+    }
+
+    return PartialView("Partials/_PopularBooksPartial", popularBooks);
+}
+
 }
