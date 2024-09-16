@@ -23,22 +23,18 @@ var query = ViewBag.Query as string;
     let bookList = [];
     let debounceTimeout = null;
 
-    // Handle input with debounce
     function handleInput(event) {
         const searchValue = $('#search-book-input').val();
 
-        // Ignore certain keypresses like backspace, arrow keys, etc.
         if (event.key === 'Backspace' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
             return;
         }
 
-        // If input is empty, clear results
         if (searchValue.length === 0) {
             emptyBookList();
             return;
         }
 
-        // Debounce the query - only fire the request if the user hasn't typed for 300ms
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => searchBook(searchValue), 300);
     }
@@ -120,19 +116,16 @@ var query = ViewBag.Query as string;
 </script>
 
 <style>
-    /* Container for search bar and results */
     .search-container {
         max-width: 800px;
         margin: 0 auto;
         font-family: Arial, sans-serif;
     }
 
-    /* Results styling */
     .results {
         margin-top: 20px;
     }
 
-    /* Card styling */
     .card {
         display: flex;
         padding: 20px;
@@ -145,7 +138,6 @@ var query = ViewBag.Query as string;
         overflow: hidden;
     }
 
-    /* Image styling */
     .book-thumbnail {
         width: 120px;
         height: 180px;
@@ -154,19 +146,16 @@ var query = ViewBag.Query as string;
         border-radius: 4px;
     }
 
-    /* Hover effect */
     .card:hover {
         transform: scale(1.02);
     }
 
-    /* Text container inside the card */
     .text-container {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
-    /* Book title styling */
     .book-title {
         font-size: 20px;
         font-weight: bold;
@@ -174,7 +163,6 @@ var query = ViewBag.Query as string;
         color: #333;
     }
 
-    /* Book subtitle styling */
     .book-subtitle {
         font-size: 16px;
         font-weight: normal;
@@ -182,21 +170,18 @@ var query = ViewBag.Query as string;
         margin: 0 0 10px;
     }
 
-    /* Book author styling */
     .book-author {
         font-size: 14px;
         color: #555;
         margin-bottom: 5px;
     }
 
-    /* Release year styling */
     .release-year {
         font-size: 12px;
         color: #777;
         margin-bottom: 10px;
     }
 
-    /* Book rating styling */
     .book-rating {
         font-size: 14px;
         font-weight: bold;
@@ -204,7 +189,6 @@ var query = ViewBag.Query as string;
         margin-bottom: 10px;
     }
 
-    /* Book description styling */
     .book-description {
         font-size: 14px;
         color: #666;
@@ -212,7 +196,6 @@ var query = ViewBag.Query as string;
         margin-top: 10px;
     }
 
-    /* Input field styling */
     #search-book-input {
         width: 100%;
         padding: 15px;

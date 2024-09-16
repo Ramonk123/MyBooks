@@ -133,7 +133,12 @@ public class BooksController : Controller
                 Author = b.Author.Name,
                 AuthorId = b.Author.PublicId,
                 BookId = b.PublicId,
+                ISBN = b.Isbn,
                 Title = b.Title,
+                Description = b.Description,
+                ReleaseYear = b.ReleaseYear,
+                Rating = b.AverageRating,
+                
                 ThumbnailURL = b.ThumbnailURL
             })
             .ToListAsync();

@@ -14,9 +14,11 @@ public static class BookQueryExtensions
     {
         return query.Where(l => l.PublicId == publicId);
     }
-    
+
     public static IQueryable<Book> WhereTitleLike(this IQueryable<Book> query, string title)
     {
-        return query.Where(b => EF.Functions.Like(b.Title, $"%{title}%"));
+        return query
+            .Where(b => EF.Functions.ILike(b.Title, $"%{title}%")
+                || EF.Functions.ILike(b.Author.Name, $"%{title}%"));
     }
 }
