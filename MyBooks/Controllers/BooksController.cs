@@ -1,3 +1,4 @@
+using System.Globalization;
 using Data.Data;
 using Data.Models;
 using Data.Queries;
@@ -137,8 +138,8 @@ public class BooksController : Controller
                 Title = b.Title,
                 Description = b.Description,
                 ReleaseYear = b.ReleaseYear,
-                Rating = b.AverageRating,
-                
+                AverageRating = b.AverageRating.GetValueOrDefault()
+                    .ToString("0.0", CultureInfo.InvariantCulture),
                 ThumbnailURL = b.ThumbnailURL
             })
             .ToListAsync();

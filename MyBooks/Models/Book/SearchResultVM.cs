@@ -9,6 +9,6 @@ public class SearchResultVM
     public string Description { get; set; }
     public string ISBN { get; set; }
     public string? ReleaseYear { get; set; }
-    public double? Rating { get; set; }
+    public string? AverageRating { get; set; }
     public string ThumbnailURL { get; set; }
 }
