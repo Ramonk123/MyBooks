@@ -37,7 +37,6 @@ namespace MyBooks.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> Login(LoginVM data)
         {
             if (!ModelState.IsValid)

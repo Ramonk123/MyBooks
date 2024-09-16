@@ -1,10 +1,17 @@
 @{
-var query = ViewBag.Query as string;
+    var query = ViewBag.Query as string;
 }
-<div class="search-container">
-    <input type="text" id="search-book-input" placeholder="Search for a book..." onchange="searchBook()">
 
-    <div class="results">
+
+@{
+ViewData["HideSearchbar"] = true;
+}
+
+
+<div class="search-container mt-5">
+    <input type="text" id="search-book-input" class="form-control search-input" placeholder="Search for a book..." onchange="searchBook()">
+
+    <div class="results mt-4">
         <!-- Search results will be appended here -->
     </div>
 </div>
@@ -77,7 +84,14 @@ var query = ViewBag.Query as string;
         results.empty();
 
         bookList.forEach(book => {
-            const card = $('<div class="card"></div>').data('book-id', book.bookId);
+            const card = $('<div class="card d-flex flex-column"></div>').data('book-id', book.bookId);
+
+            const headerContainer = $('<div class="header-container d-flex justify-content-between align-items-center"></div>');
+            const title = $(`<h2 class="book-title">${book.title}</h2>`);
+            const detailsButton = $(`<a class="btn btn-outline-secondary" href="/Books/Details/${book.bookId}">See more</a>`);
+            headerContainer.append(title).append(detailsButton);
+
+            const contentContainer = $('<div class="content-container d-flex"></div>');
 
             const thumbnail = book.thumbnailURL
                 ? `<img src="${book.thumbnailURL}" alt="${book.title} thumbnail" class="book-thumbnail" loading="lazy">`
@@ -88,23 +102,24 @@ var query = ViewBag.Query as string;
             const subtitle = book.subtitle || "";
             const description = book.description ? book.description.substring(0, 150) + "..." : "No description available.";
 
-            const title = $(`<h2 class="book-title">${book.title}</h2>`);
+            const textContainer = $('<div class="text-container"></div>');
             const subtitleElement = subtitle ? $(`<h3 class="book-subtitle">${subtitle}</h3>`) : '';
             const author = $(`<p class="book-author">By: ${book.author}</p>`);
             const releaseYearElement = $(`<p class="release-year">Published: ${releaseYear}</p>`);
             const rating = $(`<p class="book-rating">Rating: ${averageRating}</p>`);
             const descriptionElement = $(`<p class="book-description">${description}</p>`);
 
-            card.append(thumbnail);
-            const textContainer = $('<div class="text-container"></div>');
-            textContainer.append(title);
             if (subtitleElement) textContainer.append(subtitleElement);
             textContainer.append(author);
             textContainer.append(releaseYearElement);
             textContainer.append(rating);
             textContainer.append(descriptionElement);
 
-            card.append(textContainer);
+            contentContainer.append(thumbnail);
+            contentContainer.append(textContainer);
+
+            card.append(headerContainer);
+            card.append(contentContainer);
             results.append(card);
         });
     }
@@ -115,39 +130,73 @@ var query = ViewBag.Query as string;
     }
 </script>
 
+<!-- Updated Styles -->
 <style>
-    .search-container {
-        max-width: 800px;
+    /* Search Input Styling */
+    .search-input {
+        width: 100%;
+        max-width: 600px;
         margin: 0 auto;
-        font-family: Arial, sans-serif;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
+    .search-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+    }
+
+    /* Results Section */
     .results {
-        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 800px;
+        margin: 20px auto;
     }
 
+    /* Book Cards */
     .card {
         display: flex;
+        flex-direction: column;
         padding: 20px;
         border: 1px solid #ddd;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         overflow: hidden;
     }
 
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Thumbnail */
     .book-thumbnail {
         width: 120px;
         height: 180px;
         object-fit: cover;
-        margin-right: 20px;
         border-radius: 4px;
+        margin-right: 20px;
     }
 
-    .card:hover {
-        transform: scale(1.02);
+    /* Header & Content Layout */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .content-container {
+        display: flex;
     }
 
     .text-container {
@@ -156,39 +205,45 @@ var query = ViewBag.Query as string;
         justify-content: space-between;
     }
 
+    /* Book Title */
     .book-title {
         font-size: 20px;
         font-weight: bold;
-        margin: 0 0 10px;
+        margin: 0;
         color: #333;
     }
 
+    /* Book Subtitle */
     .book-subtitle {
         font-size: 16px;
         font-weight: normal;
-        color: #666;
-        margin: 0 0 10px;
+        color: #777;
+        margin-bottom: 10px;
     }
 
+    /* Book Author */
     .book-author {
         font-size: 14px;
         color: #555;
         margin-bottom: 5px;
     }
 
+    /* Release Year */
     .release-year {
         font-size: 12px;
-        color: #777;
-        margin-bottom: 10px;
+        color: #999;
+        margin-bottom: 5px;
     }
 
+    /* Book Rating */
     .book-rating {
         font-size: 14px;
         font-weight: bold;
         color: #444;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
+    /* Book Description */
     .book-description {
         font-size: 14px;
         color: #666;
@@ -196,13 +251,15 @@ var query = ViewBag.Query as string;
         margin-top: 10px;
     }
 
-    #search-book-input {
-        width: 100%;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-size: 18px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Button Styling */
+    .btn-outline-secondary {
+        color: #007bff;
+        border-color: #007bff;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #007bff;
+        color: #fff;
     }
 </style>

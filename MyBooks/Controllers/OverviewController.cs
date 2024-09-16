@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
 using MyBooks.Models.Overview;
 using MyBooks.Services;
-using MyBooks.Services.Data.Enums;
 using PopularityService;
 
 namespace MyBooks.Controllers;
@@ -17,20 +16,17 @@ namespace MyBooks.Controllers;
 [Authorize]
 public class OverviewController : Controller
 {
-    private readonly OpenLibaryService _openLibraryService;
     private readonly MyBooksDbContext _context;
     private readonly PopularityQueryService _popularityService;
     private readonly UserManager<User> _userManager;
     private readonly ILogger<OverviewController> _logger;
 
     public OverviewController(
-        OpenLibaryService openLibraryService,
         MyBooksDbContext context,
         PopularityQueryService popularityService,
         UserManager<User> userManager,
         ILogger<OverviewController> logger)
     {
-        _openLibraryService = openLibraryService;
         _context = context;
         _popularityService = popularityService;
         _userManager = userManager;

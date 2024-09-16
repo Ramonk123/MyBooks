@@ -14,7 +14,10 @@
                     {
                         <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                             @library.Name
-                            <button class="btn btn-outline-secondary btn-sm" onclick="openEditLibraryModal(@library.LibraryId)">Edit</button>
+                            @if (library.LibraryId != Model.DefaultLibrary.LibraryId)
+                            {
+                                <button class="btn btn-outline-secondary btn-sm" onclick="openEditLibraryModal(@library.LibraryId)">Edit</button>
+                            }
                         </a>
                     }
                 </div>
@@ -28,7 +31,6 @@
                     <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button>
                 </div>
                 <div class="card-body">
-                    <!-- Mock Books -->
                     <div class="list-group">
                         @foreach (var book in Model.DefaultLibrary.Books)
                         {
@@ -54,8 +56,6 @@
     </div>
 </div>
 
-<!-- Modals for Creating and Editing Libraries -->
-<!-- Create Library Modal -->
 <div class="modal fade" id="createLibraryModal" tabindex="-1" role="dialog" aria-labelledby="createLibraryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -78,7 +78,6 @@
     </div>
 </div>
 
-<!-- Edit Library Modal -->
 <div class="modal fade" id="editLibraryModal" tabindex="-1" role="dialog" aria-labelledby="editLibraryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -142,6 +141,7 @@
     .list-group-item {
         border: none;
         padding: 1.5rem;
+        margin: 0.2em 0 0.2em 0;
         transition: background-color 0.3s ease;
         border-radius: 0.5rem;
         background-color: #ffffff;
