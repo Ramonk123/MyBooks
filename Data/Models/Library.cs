@@ -12,4 +12,35 @@ public class Library
     public virtual User User { get; set; }
     public LibraryType Type { get; set; }
     public ICollection<LibraryBook> LibraryBooks { get; set; }
+
+    public static List<Library> createDefaultLibraries(User user)
+    {
+        return new List<Library>()
+        {
+            new Library
+            {
+                PublicId = Guid.NewGuid(),
+                Name = "My Books",
+                Type = LibraryType.DefaultLibrary,
+                User = user,
+                Books = new List<Book>()
+            },
+            new Library
+            {
+                PublicId = Guid.NewGuid(),
+                Name = "Wish To Read",
+                Type = LibraryType.WishToRead,
+                User = user,
+                Books = new List<Book>()
+            },
+            new Library
+            {
+                PublicId = Guid.NewGuid(),
+                Name = "Read",
+                Type = LibraryType.Read,
+                User = user,
+                Books = new List<Book>()
+            }
+        };
+    }
 }

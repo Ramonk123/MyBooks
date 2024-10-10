@@ -1,0 +1,29 @@
+@model MyBooks.Models.Library.LibraryIndexVM
+
+<div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">@Model.DefaultLibrary.Name</h5>
+        <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            @foreach (var book in Model.DefaultLibrary.Books)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="@book.ThumbnailURL" class="rounded mr-3" width="80" height="120" alt="Book Thumbnail">
+                        <div>
+                            <h5 class="mb-1">@book.Title</h5>
+                            <p class="mb-1 text-muted">@book.Author</p>
+                            <p class="mb-1"><strong>Status:</strong> Unread</p>
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeBook(@book.BookId)">Remove</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

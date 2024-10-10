@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBooks.Models.Account;
-using WebApplication1.Models;
 
 namespace MyBooks.Controllers
 {
@@ -82,22 +81,15 @@ namespace MyBooks.Controllers
                 UserName = data.Username,
                 FullName = data.FullName,
             };
-            
-            var defaultLibrary = new Library
-            {
-                PublicId = Guid.NewGuid(),
-                Name = "My Books",
-                Type = LibraryType.DefaultLibrary,
-                User = user,
-                Books = new List<Book>()
-            };
+
+            var defaultLibraries = Library.createDefaultLibraries(user);
 
             
             var result = await _userManager.CreateAsync(user, data.Password);
 
             if (result.Succeeded)
             {
-                _context.Libraries.Add(defaultLibrary);
+                _context.Libraries.AddRange(defaultLibraries);
                 await _context.SaveChangesAsync();
                 
                 await _signInManager.SignInAsync(user, isPersistent: false);

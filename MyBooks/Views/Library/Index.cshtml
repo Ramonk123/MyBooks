@@ -2,56 +2,12 @@
 
 <div class="container-fluid mt-4">
     <div class="row">
-        <!-- Sidebar for Libraries -->
         <div class="col-md-3">
-            <div class="card shadow-lg">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Your Libraries</h5>
-                    <button class="btn btn-primary btn-sm" onclick="openCreateLibraryModal()">Create Library</button>
-                </div>
-                <div class="list-group list-group-flush">
-                    @foreach(var library in Model.Libraries)
-                    {
-                        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            @library.Name
-                            @if (library.LibraryId != Model.DefaultLibrary.LibraryId)
-                            {
-                                <button class="btn btn-outline-secondary btn-sm" onclick="openEditLibraryModal(@library.LibraryId)">Edit</button>
-                            }
-                        </a>
-                    }
-                </div>
-            </div>
+            @Html.Partial("Partials/_LibrarySidebarPartial", Model)
         </div>
 
         <div class="col-md-9">
-            <div class="card shadow-lg">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">@Model.DefaultLibrary.Name</h5>
-                    <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button>
-                </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        @foreach (var book in Model.DefaultLibrary.Books)
-                        {
-                            <div class="list-group-item d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <img src="@book.ThumbnailURL" class="rounded mr-3" width="80" height="120" alt="Book Thumbnail">
-                                    <div>
-                                        <h5 class="mb-1">@book.Title</h5>
-                                        <p class="mb-1 text-muted">@book.Author</p>
-                                        <p class="mb-1"><strong>Status:</strong> Unread</p>
-                                    </div>
-                                </div>
-                                <div class="ml-auto">
-                                    <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="removeBook(1)">Remove</button>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+            @Html.Partial("Partials/_LibraryBooksPartial", Model)
         </div>
     </div>
 </div>
@@ -71,7 +27,7 @@
                         <label for="libraryName">Library Name</label>
                         <input type="text" class="form-control" id="libraryName" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button id="add-library-btn"type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
         </div>
@@ -89,48 +45,106 @@
             </div>
             <div class="modal-body">
                 <form id="editLibraryForm">
-                    <input type="hidden" id="editLibraryId">
+                    <input type="hidden" id="editLibraryId" value="">
                     <div class="form-group">
                         <label for="editLibraryName">Library Name</label>
                         <input type="text" class="form-control" id="editLibraryName" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" onclick="editLibrary()">Save Changes</button>
+                    <button type="submit" class="btn btn-danger" onclick="deleteLibrary()">Delete Library</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript to handle modals -->
 <script>
     function openCreateLibraryModal() {
         $('#createLibraryModal').modal('show');
+        $('#add-library-btn').on('click', function(e) {
+            e.preventDefault();
+            submitCreateLibraryForm();
+        });
     }
 
-    function openEditLibraryModal(libraryId) {
-        // Mock: Prepopulate modal for editing library (use real data in production)
-        $('#editLibraryId').val(libraryId);
-        $('#editLibraryName').val(libraryId === 1 ? 'Fantasy Library' : libraryId === 2 ? 'Science Fiction Library' : 'Classics Library');
+    function openEditLibraryModal(id) {
+        $('#editLibraryId').val(id);
         $('#editLibraryModal').modal('show');
+    }
+    
+    function editLibrary() {
+        name = $('#editLibraryName').val();
+        id = $('#editLibraryId').val();
+        
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(name)
+        }
+        
+        fetch('Edit/' + id.toString(), options)
+        .then(res => res.json())
+        .then(data => {
+            window.location.href = '/Library/Index';
+        }).catch(err => console.log(err));
+    }
+
+    function deleteLibrary() {
+        const id = $('#editLibraryId').val();
+
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        fetch(`Delete/${id}`, options)
+            .then(res => res.json())
+            .catch(err => console.log(err));
     }
 
     function openAddBookModal() {
-        // Mock logic to open Add Book modal
-        alert('Open Add Book Modal');
+
     }
 
     function removeBook(bookId) {
-        if (confirm("Are you sure you want to remove this book from the library?")) {
-            alert('Book with ID ' + bookId + ' will be removed.');
-        }
+
     }
     
+    function addLibrary() {
+
+    }
+
     function submitCreateLibraryForm() {
-    
+        const name = $('#libraryName').val();
+
+        fetch('Add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ Name: name })
+        })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => {
+                        throw new Error(err.Message.join(", "));
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log(data);
+                window.location.href = '/Library/Index';
+            })
+            .catch(err => alert(err.message));
     }
+
 </script>
 
-<!-- Custom Styles -->
 <style>
     .card {
         border-radius: 0.75rem;

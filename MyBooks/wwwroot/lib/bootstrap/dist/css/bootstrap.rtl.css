@@ -6,57 +6,59 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
-  --bs-blue: #0d6efd;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --bs-pink: #d63384;
-  --bs-red: #dc3545;
-  --bs-orange: #fd7e14;
-  --bs-yellow: #ffc107;
-  --bs-green: #198754;
-  --bs-teal: #20c997;
-  --bs-cyan: #0dcaf0;
-  --bs-white: #fff;
-  --bs-gray: #6c757d;
-  --bs-gray-dark: #343a40;
-  --bs-gray-100: #f8f9fa;
-  --bs-gray-200: #e9ecef;
-  --bs-gray-300: #dee2e6;
-  --bs-gray-400: #ced4da;
-  --bs-gray-500: #adb5bd;
-  --bs-gray-600: #6c757d;
-  --bs-gray-700: #495057;
-  --bs-gray-800: #343a40;
-  --bs-gray-900: #212529;
-  --bs-primary: #0d6efd;
-  --bs-secondary: #6c757d;
-  --bs-success: #198754;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
-  --bs-primary-rgb: 13, 110, 253;
-  --bs-secondary-rgb: 108, 117, 125;
-  --bs-success-rgb: 25, 135, 84;
-  --bs-info-rgb: 13, 202, 240;
-  --bs-warning-rgb: 255, 193, 7;
-  --bs-danger-rgb: 220, 53, 69;
-  --bs-light-rgb: 248, 249, 250;
-  --bs-dark-rgb: 33, 37, 41;
-  --bs-white-rgb: 255, 255, 255;
-  --bs-black-rgb: 0, 0, 0;
-  --bs-body-rgb: 33, 37, 41;
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --bs-blue: #7D8B77; /* Muted green-grey (primary color) */
+  --bs-indigo: #D9CAB3; /* Warm beige (secondary color) */
+  --bs-purple: #6f42c1; /* Geen vervanging; originele waarde */
+  --bs-pink: #d63384; /* Geen vervanging; originele waarde */
+  --bs-red: #b02a37; /* Donkere roodtint voor danger */
+  --bs-orange: #D0894B; /* Burnt orange/clay (accent color) */
+  --bs-yellow: #ffc107; /* Geen vervanging; originele waarde */
+  --bs-green: #7D8B77; /* Muted green-grey als groene tint */
+  --bs-teal: #D9CAB3; /* Warm beige als zachte tint */
+  --bs-cyan: #0dcaf0; /* Geen vervanging; originele waarde */
+  --bs-white: #F5F5F5; /* Light greyish white (neutral color) */
+  --bs-gray: #4B4B4B; /* Donkergrijs (text color) */
+  --bs-gray-dark: #343a40; /* Geen vervanging; originele waarde */
+  --bs-gray-100: #F9F8F6; /* Off-white (background color) */
+  --bs-gray-200: #E0E0E0; /* Light grey for borders */
+  --bs-gray-300: #dee2e6; /* Geen vervanging; originele waarde */
+  --bs-gray-400: #ced4da; /* Geen vervanging; originele waarde */
+  --bs-gray-500: #adb5bd; /* Geen vervanging; originele waarde */
+  --bs-gray-600: #6c757d; /* Geen vervanging; originele waarde */
+  --bs-gray-700: #495057; /* Geen vervanging; originele waarde */
+  --bs-gray-800: #343a40; /* Geen vervanging; originele waarde */
+  --bs-gray-900: #212529; /* Geen vervanging; originele waarde */
+  --bs-primary: #7D8B77; /* Muted green-grey (primary color) */
+  --bs-secondary: #D9CAB3; /* Warm beige (secondary color) */
+  --bs-success: #D0894B; /* Burnt orange/clay (accent color as success) */
+  --bs-info: #F5F5F5; /* Light greyish white (neutral as info) */
+  --bs-warning: #D0894B; /* Burnt orange/clay (accent color as warning) */
+  --bs-danger: #b02a37; /* Donkere roodtint voor danger */
+  --bs-light: #F9F8F6; /* Off-white (background color as light) */
+  --bs-dark: #4B4B4B; /* Donkergrijs (text color as dark) */
+
+  /* RGB values for new colors */
+  --bs-primary-rgb: 125, 139, 119; /* Primary color RGB */
+  --bs-secondary-rgb: 217, 202, 179; /* Secondary color RGB */
+  --bs-success-rgb: 208, 137, 75; /* Accent color RGB */
+  --bs-info-rgb: 245, 245, 245; /* Neutral color RGB */
+  --bs-warning-rgb: 208, 137, 75; /* Accent color RGB */
+  --bs-danger-rgb: 176, 42, 55; /* Danger color RGB */
+  --bs-light-rgb: 249, 248, 246; /* Off-white RGB */
+  --bs-dark-rgb: 75, 75, 75; /* Text color RGB */
+  --bs-white-rgb: 245, 245, 245; /* Light greyish white RGB */
+  --bs-black-rgb: 0, 0, 0; /* Zwart blijft ongewijzigd */
+  --bs-body-rgb: 75, 75, 75; /* Text color RGB */
+
+  /* Body styles */
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #212529;
-  --bs-body-bg: #fff;
+  --bs-body-color: var(--text-color); /* Dark grey for text */
+  --bs-body-bg: var(--background-color); /* Off-white background */
 }
+
 
 *,
 *::before,

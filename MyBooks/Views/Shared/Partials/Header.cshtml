@@ -20,7 +20,7 @@
 
                 @if (ViewData["HideSearchbar"] == null || !(bool)ViewData["HideSearchbar"])
                 {
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav search-bar">
                         <li class="nav-item">
                             <input id="search-bar" type="text" placeholder="Search books, authors">
                         </li>
@@ -48,6 +48,11 @@
 </script>
 
 <style>
+    
+    .search-bar {
+        min-width: 500px;    
+    }
+    
     header {
         background-color: #ffffff;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

@@ -102,16 +102,14 @@ ViewData["HideSearchbar"] = true;
                 const myBooksContainer = document.querySelector('.my-books');
                 if (myBooksContainer) {
                     myBooksContainer.innerHTML = html;
-                    loadModalJavascript();  // Ensure the function is called after the content is loaded
+                    loadModalJavascript(); 
                 } else {
                     console.error('Error: .my-books container not found');
                 }
             })
             .catch(error => console.error(error));
     }
-
-
-
+    
     function loadModalJavascript() {
         document.removeEventListener('click', handleButtonClick);
         document.addEventListener('click', handleButtonClick);
@@ -129,7 +127,7 @@ ViewData["HideSearchbar"] = true;
                     const modalContainer = document.createElement('div');
                     modalContainer.innerHTML = html;
                     document.body.appendChild(modalContainer);
-
+                    
                     $('#addBookModal').modal('show');
                 }).catch(err => console.error(err));
         }

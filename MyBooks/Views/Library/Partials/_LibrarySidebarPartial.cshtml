@@ -1,0 +1,20 @@
+@model MyBooks.Models.Library.LibraryIndexVM
+
+<div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Your Libraries</h5>
+        <button class="btn btn-primary btn-sm" onclick="openCreateLibraryModal()">Create Library</button>
+    </div>
+    <div class="list-group list-group-flush">
+        @foreach (var library in Model.Libraries)
+        {
+            <a id="@library.LibraryId" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                @library.Name
+                @if (library.LibraryId != Model.DefaultLibrary.LibraryId)
+                {
+                    <button class="btn btn-outline-secondary btn-sm" onclick="openEditLibraryModal('@library.LibraryId')">Edit</button>
+                }
+            </a>
+        }
+    </div>
+</div>

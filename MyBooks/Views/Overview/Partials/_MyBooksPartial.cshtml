@@ -1,7 +1,7 @@
 @model MyBooks.Models.Overview.MyBooksVM;
 
 <div class="card w-100 mt-5 my-books-card shadow-lg">
-    <div class="d-flex justify-content-between align-items-center card-header bg-primary text-white">
+    <div class="d-flex justify-content-between align-items-center card-header text-white">
         <h3 class="mx-2 mb-0">My Books Collection</h3>
         <div class="quick-actions">
             <input type="text" id="search-book-input" placeholder="Search...">
@@ -50,7 +50,7 @@
     .my-books-card {
         overflow-y: auto;
         border-radius: 0.75rem;
-        background-color: #f8f9fa;
+        background-color: var(--background-color); /* Off-white */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
@@ -58,6 +58,8 @@
         border-top-left-radius: 0.75rem;
         border-top-right-radius: 0.75rem;
         padding: 1rem;
+        background-color: var(--primary-color); /* Muted green-grey */
+        color: var(--neutral-color); /* Light greyish white */
     }
 
     .card-item {
@@ -65,12 +67,12 @@
         padding: 1.5rem;
         transition: background-color 0.3s ease;
         border-radius: 0.5rem;
-        background-color: #ffffff;
+        background-color: var(--neutral-color); /* Light greyish white */
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .card-item:hover {
-        background-color: #f1f3f5;
+        background-color: var(--border-color); /* Light grey */
     }
 
     .image-container img {
@@ -84,25 +86,29 @@
 
     .details h5 {
         font-weight: bold;
-        color: #495057;
+        color: var(--text-color); /* Dark grey */
     }
 
     .details .btn-outline-primary {
+        border-color: var(--primary-color); /* Muted green-grey */
+        color: var(--primary-color); /* Muted green-grey */
         transition: all 0.3s ease;
     }
 
     .details .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: #ffffff;
-        border-color: #007bff;
+        background-color: var(--primary-color); /* Muted green-grey */
+        color: var(--neutral-color); /* Light greyish white */
+        border-color: var(--primary-color); /* Muted green-grey */
     }
 
     .btn-add-book {
         transition: background-color 0.3s ease;
+        background-color: var(--accent-color); /* Burnt orange/clay */
+        color: var(--neutral-color); /* Light greyish white */
     }
 
     .btn-add-book:hover {
-        background-color: #0056b3;
+        background-color: #b66f3d; /* Darker burnt orange */
     }
 
     .quick-actions {
@@ -110,8 +116,27 @@
         align-items: center;
     }
 
+    .quick-actions input {
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        border: 1px solid var(--border-color); /* Light grey for borders */
+        background-color: var(--neutral-color); /* Light greyish white */
+        color: var(--text-color); /* Dark grey */
+    }
+
     .quick-actions a {
         display: inline-flex;
         align-items: center;
     }
+
+    .btn-outline-light {
+        border-color: var(--neutral-color); /* Light greyish white */
+        color: var(--neutral-color); /* Light greyish white */
+    }
+
+    .btn-outline-light:hover {
+        background-color: var(--neutral-color); /* Light greyish white */
+        color: var(--primary-color); /* Muted green-grey */
+    }
+
 </style>

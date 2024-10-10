@@ -10,61 +10,63 @@
   content: "";
 }
 
+/* Custom link styles based on the earthy theme palette */
 .link-primary {
-  color: #0d6efd;
+  color: var(--primary-color); /* Muted green-grey */
 }
 .link-primary:hover, .link-primary:focus {
-  color: #0a58ca;
+  color: #6a7564; /* Slightly darker shade for hover/focus */
 }
 
 .link-secondary {
-  color: #6c757d;
+  color: var(--secondary-color); /* Warm beige */
 }
 .link-secondary:hover, .link-secondary:focus {
-  color: #565e64;
+  color: #c4b59d; /* Slightly darker shade for hover/focus */
 }
 
 .link-success {
-  color: #198754;
+  color: var(--accent-color); /* Burnt orange/clay */
 }
 .link-success:hover, .link-success:focus {
-  color: #146c43;
+  color: #b66f3d; /* Darker shade of burnt orange for hover/focus */
 }
 
 .link-info {
-  color: #0dcaf0;
+  color: var(--neutral-color); /* Light greyish white */
 }
 .link-info:hover, .link-info:focus {
-  color: #3dd5f3;
+  color: #e0e0e0; /* Slightly darker neutral grey for hover/focus */
 }
 
 .link-warning {
-  color: #ffc107;
+  color: var(--accent-color); /* Burnt orange/clay */
 }
 .link-warning:hover, .link-warning:focus {
-  color: #ffcd39;
+  color: #b66f3d; /* Darker version of the accent color */
 }
 
 .link-danger {
-  color: #dc3545;
+  color: #b02a37; /* Retaining the original danger color */
 }
 .link-danger:hover, .link-danger:focus {
-  color: #b02a37;
+  color: #9b232e; /* Slightly darker danger color for hover/focus */
 }
 
 .link-light {
-  color: #f8f9fa;
+  color: var(--neutral-color); /* Light greyish white */
 }
 .link-light:hover, .link-light:focus {
-  color: #f9fafb;
+  color: #eaeaea; /* Slightly darker neutral white */
 }
 
 .link-dark {
-  color: #212529;
+  color: var(--text-color); /* Dark grey */
 }
 .link-dark:hover, .link-dark:focus {
-  color: #1a1e21;
+  color: #383838; /* Darker grey for hover/focus */
 }
+
 
 .ratio {
   position: relative;

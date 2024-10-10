@@ -3,7 +3,8 @@ namespace Data.Data.Enums;
 public enum LibraryType
 {
     DefaultLibrary = 0,
-    Wishlist = 1,
+    WishToRead = 1,
     ReadingList = 2,
-    Read = 3
+    Read = 3,
+    Custom = 4
 }
