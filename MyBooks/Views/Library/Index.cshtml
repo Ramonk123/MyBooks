@@ -120,13 +120,14 @@
 
     function submitCreateLibraryForm() {
         const name = $('#libraryName').val();
+        console.log(name)
 
-        fetch('Add', {
+        fetch('/Library/Add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Name: name })
+            body: JSON.stringify(name)
         })
             .then(res => {
                 if (!res.ok) {
