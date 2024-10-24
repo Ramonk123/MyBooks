@@ -1,0 +1,25 @@
+@model MyBooks.Models.Library.EditLibraryVM
+
+<div class="modal fade" id="editLibraryModal" tabindex="-1" role="dialog" aria-labelledby="editLibraryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLibraryModalLabel">Edit Library</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editLibraryForm">
+                    <input type="hidden" id="editLibraryId" value="@Model.LibraryId">
+                    <div class="form-group">
+                        <label for="editLibraryName">Library Name</label>
+                        <input type="text" class="form-control" id="editLibraryName" required>
+                    </div>
+                    <button type="submit" id="edit-library-submit" class="btn btn-primary" onclick="">Save Changes</button>
+                    <button type="submit" id="delete-library-submit"class="btn btn-danger" onclick="">Delete Library</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

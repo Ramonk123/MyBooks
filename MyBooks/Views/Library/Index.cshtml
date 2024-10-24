@@ -3,76 +3,91 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-md-3">
-            @Html.Partial("Partials/_LibrarySidebarPartial", Model)
+            @Html.Partial("Partials/_LibrarySidebarPartial", Model.Libraries)
         </div>
 
-        <div class="col-md-9">
-            @Html.Partial("Partials/_LibraryBooksPartial", Model)
+        <div class="col-md-9 books">
+            @Html.Partial("Partials/_LibraryBooksPartial", Model.Library)
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="createLibraryModal" tabindex="-1" role="dialog" aria-labelledby="createLibraryModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createLibraryModalLabel">Create Library</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createLibraryForm">
-                    <div class="form-group">
-                        <label for="libraryName">Library Name</label>
-                        <input type="text" class="form-control" id="libraryName" required>
-                    </div>
-                    <button id="add-library-btn"type="submit" class="btn btn-primary">Create</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="add-library-modal"></div>
+<div class="edit-library-modal"></div>
 
-<div class="modal fade" id="editLibraryModal" tabindex="-1" role="dialog" aria-labelledby="editLibraryModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editLibraryModalLabel">Edit Library</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editLibraryForm">
-                    <input type="hidden" id="editLibraryId" value="">
-                    <div class="form-group">
-                        <label for="editLibraryName">Library Name</label>
-                        <input type="text" class="form-control" id="editLibraryName" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" onclick="editLibrary()">Save Changes</button>
-                    <button type="submit" class="btn btn-danger" onclick="deleteLibrary()">Delete Library</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
+    $(document).ready(() => {
+        $('.library-button').click(function() {
+            const id = $(this).attr('id');
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html'
+                }
+            }
+            fetch('Library/GetLibrary/' + id, options)
+                .then(res => res.text())
+                .then(data => {
+                    $('.books').html(data);
+                })
+        })
+    })
     function openCreateLibraryModal() {
-        $('#createLibraryModal').modal('show');
-        $('#add-library-btn').on('click', function(e) {
-            e.preventDefault();
-            submitCreateLibraryForm();
-        });
+        
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/html'
+            }    
+        }
+        fetch('Library/Add', options)
+            .then(res => res.text())
+            .then(data => {
+                $('.add-library-modal').html(data);
+                $('#addLibraryModal').modal('toggle');
+            }).then(() => {
+                $('#add-library-btn').click(submitCreateLibraryForm);
+            })
     }
 
     function openEditLibraryModal(id) {
-        $('#editLibraryId').val(id);
-        $('#editLibraryModal').modal('show');
+        console.log('called', id)
+
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/html'
+            }
+        }
+        
+        fetch('Library/Edit/' + id, options)
+            .then(res => res.text())
+            .then(data => {
+                $('.edit-library-modal').html(data);
+                $('#editLibraryModal').modal('toggle');
+            }).then(() => addEditLibraryEventListeners());
+    }
+    
+    function addEditLibraryEventListeners() {
+        const editLibrarySubmit = $('#edit-library-submit');
+        const deleteLibrarySubmit = $('#delete-library-submit');
+        
+        editLibrarySubmit.on('click', editLibrary);
+        deleteLibrarySubmit.on('click', deleteLibrary);
+
+    }
+    
+    function addLibraryToView(id, name) {
+        $('#addLibraryModal').modal('hide');
+     
+        const libraryDiv = $(".libraries");
+        libraryDiv.append(`<a id="${id}" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">${name}</a>`);
+        
     }
     
     function editLibrary() {
+        console.log('editLibrary called');
         name = $('#editLibraryName').val();
         id = $('#editLibraryId').val();
         
@@ -84,11 +99,13 @@
             body: JSON.stringify(name)
         }
         
-        fetch('Edit/' + id.toString(), options)
+        fetch('Library/Edit/' + id.toString(), options)
         .then(res => res.json())
         .then(data => {
-            window.location.href = '/Library/Index';
-        }).catch(err => console.log(err));
+            $('#editLibraryModal').modal('hide');
+            $(`#${id}`).text(data.name);
+        })
+        .catch(err => console.log(err));
     }
 
     function deleteLibrary() {
@@ -101,26 +118,13 @@
             }
         };
 
-        fetch(`Delete/${id}`, options)
-            .then(res => res.json())
+        fetch(`Library/Delete/${id}`, options)
             .catch(err => console.log(err));
     }
-
-    function openAddBookModal() {
-
-    }
-
-    function removeBook(bookId) {
-
-    }
     
-    function addLibrary() {
-
-    }
-
     function submitCreateLibraryForm() {
         const name = $('#libraryName').val();
-        console.log(name)
+        console.log(name);
 
         fetch('/Library/Add', {
             method: 'POST',
@@ -129,20 +133,11 @@
             },
             body: JSON.stringify(name)
         })
-            .then(res => {
-                if (!res.ok) {
-                    return res.json().then(err => {
-                        throw new Error(err.Message.join(", "));
-                    });
-                }
-                return res.json();
-            })
-            .then(data => {
-                console.log(data);
-                window.location.href = '/Library/Index';
-            })
-            .catch(err => alert(err.message));
+            .then(res => res.json())
+            .then(data => addLibraryToView(data.id, data.name))
+            .catch(err => console.log(err));    
     }
+
 
 </script>
 

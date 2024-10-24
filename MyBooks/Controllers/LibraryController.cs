@@ -36,8 +36,9 @@ public class LibraryController : Controller
 
         if (userId == null) return BadRequest();
 
-        var libraries = await _context.Libraries
+        var defaultLibrary = await _context.Libraries
             .WhereUserIs(userId)
+            .WhereTypeIs(LibraryType.DefaultLibrary)
             .Select(l => new LibraryVM
             {
                 LibraryId = l.PublicId,
@@ -53,19 +54,43 @@ public class LibraryController : Controller
                     ThumbnailURL = lb.Book.ThumbnailURL
                 }).ToList()
             })
-            .ToListAsync();
+            .SingleAsync();
 
-        var defaultLibrary = libraries
-            .SingleOrDefault(l => l.Type == LibraryType.DefaultLibrary);
-
-        if (defaultLibrary == null) return BadRequest("Default library not found");
-
+        var libraries = await _context.Libraries.WhereUserIs(userId)
+            .Select(l => new LibrarySidebarVM
+            {
+                Name = l.Name,
+                PublicId = l.PublicId
+            }).ToListAsync();
 
         return View("Index", new LibraryIndexVM
         {
-            DefaultLibrary = defaultLibrary,
+            Library = defaultLibrary,
             Libraries = libraries
         });
+    }
+
+    public async Task<IActionResult> GetLibrary(Guid id)
+    {
+        var library = await _context.Libraries.WherePublicIdIs(id)
+            .Select(l => new LibraryVM
+            {
+                LibraryId = l.PublicId,
+                Name = l.Name,
+                Type = l.Type,
+                Books = l.LibraryBooks.Select(lb => new LibraryBookVM
+                {
+                    BookId = lb.Book.PublicId,
+                    AuthorId = lb.Book.Author.PublicId,
+                    Title = lb.Book.Title,
+                    Author = lb.Book.Author.Name,
+                    Status = lb.Status.ToString(),
+                    ThumbnailURL = lb.Book.ThumbnailURL
+                }).ToList()
+            })
+            .SingleAsync();
+
+        return PartialView("Partials/_LibraryBooksPartial", library);
     }
 
     [HttpGet("Library/AddBookPopup/{libraryId}")]
@@ -107,6 +132,25 @@ public class LibraryController : Controller
         return library;
     }
 
+    [HttpGet(Routes.Library.Edit)]
+    public async Task<IActionResult> EditLibrary([FromRoute] Guid id)
+    {
+        try
+        {
+            var library = await _context.Libraries.WherePublicIdIs(id).SingleAsync();
+
+            return PartialView("Partials/_EditLibraryPartial", new EditLibraryVM
+                {
+                    LibraryId = library.PublicId
+                }
+            );
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { message = "Library not found" });
+        }
+    }
+
     [HttpPut(Routes.Library.Edit)]
     public async Task<IActionResult> EditLibrary([FromRoute] Guid id, [FromBody] string name)
     {
@@ -120,7 +164,13 @@ public class LibraryController : Controller
         _context.Libraries.Update(library);
         await _context.SaveChangesAsync();
 
-        return Ok();
+        return Json(new { id, name });
+    }
+
+    [HttpGet(Routes.Library.Add)]
+    public IActionResult OpenCreateLibraryModal()
+    {
+        return PartialView("Partials/_AddLibraryPartial");
     }
 
     [HttpDelete(Routes.Library.Delete)]
@@ -133,15 +183,6 @@ public class LibraryController : Controller
         if (library == null) return BadRequest();
 
         _context.Libraries.Remove(library);
-
-        try
-        {
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Unable to delete library with id: {id} for user: {User.Identity.Name}");
-            return BadRequest();
-        }
 
         await _context.SaveChangesAsync();
 
@@ -161,10 +202,8 @@ public class LibraryController : Controller
             .ToListAsync();
 
         if (userLibraries.Any(l => string.Equals(l.Name, name, StringComparison.OrdinalIgnoreCase)))
-        {
-            return BadRequest(new {Message = "Library with this name already exists"});
-        }
-        
+            return BadRequest(new { Message = "Library with this name already exists" });
+
         var library = new Library
         {
             PublicId = Guid.NewGuid(),
@@ -176,6 +215,10 @@ public class LibraryController : Controller
         await _context.Libraries.AddAsync(library);
         await _context.SaveChangesAsync();
 
-        return Ok(name);
+        return Json(new
+        {
+            id = library.PublicId,
+            name
+        });
     }
 }
