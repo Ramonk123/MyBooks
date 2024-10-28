@@ -24,7 +24,7 @@ public static class Routes
         public const string Base = "/Books";
         public const string Details = $"{Base}/Details/{{id}}";
         public const string Popular = $"{Base}/Popular";
-        public const string AddBook = $"{Base}/AddBook/{{libraryId}}";
+        public const string AddBookToLibrary = $"{Base}/Add/{{bookId}}";
         public const string Search = $"{Base}/Search/{{query}}";
     }
 }

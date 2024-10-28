@@ -1,0 +1,60 @@
+@model MyBooks.Models.Shared.AddBookToLibraryVM
+
+<div class="modal-dialog" id="@Model.Book.Id">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1>Add your book to a library</h1>
+        </div>
+        <div class="alert alert-danger fade show my-3" style="display: none" role="alert">
+        </div>
+        <div class="modal-body">
+            <div class="form my-2">
+                <label for="selectedLibrary">Select the library you want to add the book to</label>
+                <select class="form-select" name="library" id="selectedLibrary">
+                    @foreach (var library in Model.Libraries)
+                    {
+                        <option value="@library.Id">@library.Name</option>
+                    }
+                </select>
+                <button class="btn btn-primary my-2" type="button" onclick="addBookToLibrary()">Add book</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const addBookToLibrary = () => {
+        const alert = $('.alert');
+        const selectedLibrary = $('#selectedLibrary').val().toString();
+        const bookId = $('.modal-dialog').attr('id');
+        console.log(bookId);
+        
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                libraryId: selectedLibrary
+            })
+        }
+        fetch(`/Books/Add/${bookId}`, options)
+        .then(res => {
+            console.log('res', res);
+            if (!res.ok) {
+                res.text().then(data => {
+                    console.log(data);
+                    alert.css('display', 'block');
+                    alert.text(data);
+                });
+            }
+        });
+    }
+</script>
+
+<style>
+    h1 {
+        color:  whitesmoke;
+    }
+</style>

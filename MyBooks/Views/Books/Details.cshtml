@@ -1,17 +1,18 @@
 @model MyBooks.Models.Book.BookDetailVM
 
-<div class="container mt-5 book-detail-container">
+<div class="container mt-5 book-detail-container" id="@Model.PublicId">
+    <div id="addBookModal" class="modal fade" tabindex="-1"></div>
     <div class="row">
         <div class="col-lg-4 text-center">
             @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
             {
-            <img src="@Model.ThumbnailUrl" class="img-fluid rounded book-thumbnail" alt="Book Thumbnail">
+                <img src="@Model.ThumbnailUrl" class="img-fluid rounded book-thumbnail" alt="Book Thumbnail">
             }
             else
             {
-            <div class="placeholder-thumbnail">
-                <p>No Thumbnail Available</p>
-            </div>
+                <div class="placeholder-thumbnail">
+                    <p>No Thumbnail Available</p>
+                </div>
             }
         </div>
         <div class="col-lg-8">
@@ -21,11 +22,15 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-muted">By: @Model.Author</h5>
-                    <p class="card-text"><strong>ISBN:</strong> @Model.ISBN</p>
-                    <p class="card-text"><strong>Description:</strong></p>
+                    <p class="card-text">
+                        <strong>ISBN:</strong> @Model.ISBN
+                    </p>
+                    <p class="card-text">
+                        <strong>Description:</strong>
+                    </p>
                     <p class="book-description">@Model.Description</p>
                     <div class="actions mt-4">
-                        <a href="#" class="btn btn-primary btn-lg">Add to Library</a>
+                        <button class="btn btn-primary btn-lg">Add to Library</button>
                         <a href="#" class="btn btn-outline-secondary btn-lg ml-2">View Reviews</a>
                     </div>
                 </div>
@@ -33,6 +38,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(() => {
+        const publicId = $('.book-detail-container').attr('id');
+        $('.btn-primary').click(() => {
+            fetch(`/Books/Add/${publicId}`)
+                .then(response => response.text())
+                .then(data => {
+                    const modal = $('#addBookModal');
+                    console.log(modal);
+                    modal.html(data);
+                    modal.modal('show');
+                });
+        });
+    });
+</script>
 
 <style>
     .book-detail-container {

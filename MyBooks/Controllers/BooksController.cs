@@ -1,5 +1,6 @@
 using System.Globalization;
 using Data.Data;
+using Data.Data.Enums;
 using Data.Models;
 using Data.Queries;
 using Microsoft.AspNetCore.Identity;
@@ -7,16 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
 using MyBooks.Models.Book;
-using PopularityService;
+using MyBooks.Models.Shared;
 
 namespace MyBooks.Controllers;
 
 public class BooksController : Controller
 {
     private readonly MyBooksDbContext _context;
-    private readonly UserManager<User> _userManager;
     private readonly ILogger<BooksController> _logger;
-    
+    private readonly UserManager<User> _userManager;
+
     public BooksController(
         MyBooksDbContext context,
         UserManager<User> userManager,
@@ -27,81 +28,17 @@ public class BooksController : Controller
         _logger = logger;
     }
 
-    
+
     public IActionResult Index([FromQuery] string? q)
     {
         ViewBag.Query = q;
         return View("Index");
     }
 
-    [HttpPost(Routes.Book.AddBook)]
-    public async Task<IActionResult> AddBook([FromForm] AddBookVM model, Guid libraryId)
-    {
-        if (libraryId == Guid.Empty)
-        {
-            return BadRequest();
-        }
-
-        var user = await _userManager.GetUserAsync(User);
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        var library = await _context.Libraries.WherePublicIdIs(libraryId).SingleAsync();
-
-        if (library.UserId != user.Id)
-        {
-            _logger.LogError($"Unauthorized user: ${user} tried to add book to library: ${library}");
-            return BadRequest();
-        }
-
-        var book = new Book
-        {
-            PublicId = Guid.NewGuid(),
-            Isbn = model.Isbn,
-            Title = model.Title,
-            Description = model.Description,
-            ThumbnailURL = model.ThumbnailURL
-        };
-
-        var author = await _context.Authors.WhereAuthorNameLike(model.AuthorName).FirstOrDefaultAsync();
-
-        if (author != null)
-        {
-            book.Author = author;
-        }
-        else
-        {
-            book.Author = new Author
-            {
-                PublicId = Guid.NewGuid(),
-                Name = model.AuthorName,
-                Books = new List<Book> { book }
-            };
-        }
-
-        _context.Books.Add(book);
-        _context.LibraryBooks.Add(new LibraryBook
-        {
-            Book = book,
-            Library = library,
-            User = user
-        });
-
-        await _context.SaveChangesAsync();
-
-        return Ok(new { success = true });
-    }
-
     [HttpGet(Routes.Book.Details)]
     public async Task<IActionResult> Details(Guid id)
     {
-        if (id == Guid.Empty)
-        {
-            return BadRequest();
-        }
+        if (id == Guid.Empty) return BadRequest();
 
         var book = await _context.Books
             .WherePublicIdIs(id)
@@ -116,14 +53,11 @@ public class BooksController : Controller
             })
             .FirstOrDefaultAsync();
 
-        if (book == null)
-        {
-            return NotFound();
-        }
+        if (book == null) return NotFound();
 
         return View("Details", book);
     }
-    
+
     [HttpGet(Routes.Book.Search)]
     public async Task<List<SearchResultVM>> Search([FromRoute] string query)
     {
@@ -145,5 +79,79 @@ public class BooksController : Controller
             .ToListAsync();
 
         return results;
+    }
+
+    [HttpGet(Routes.Book.AddBookToLibrary)]
+    public async Task<IActionResult> AddBookToLibrary(Guid bookId)
+    {
+        var userId = _userManager.GetUserId(User);
+        
+        var user = await _context.Users
+            .Where(u => userId == u.Id)
+            .FirstOrDefaultAsync();
+
+        if (user == null) return BadRequest("User not found");
+
+        var book = await _context.Books.WherePublicIdIs(bookId)
+            .Select(b => new BookVM
+            {
+                Id = b.PublicId,
+                Title = b.Title
+            })
+            .SingleAsync();
+
+        var libraries = await _context.Libraries.WhereUserIs(user.Id)
+            .Select(l => new LibraryVM
+            {
+                Id = l.PublicId,
+                Name = l.Name,
+                BookIds = l.LibraryBooks.Select(lb => lb.Book.PublicId).ToList()
+            })
+            .ToListAsync();
+
+        return PartialView("Partials/_AddBookToLibraryPartial", new AddBookToLibraryVM
+        {
+            Book = book,
+            Libraries = libraries,
+        });
+    }
+
+    [HttpPost(Routes.Book.AddBookToLibrary)]
+    public async Task<IActionResult> AddBookToLibrary([FromRoute]string bookId, [FromBody] AddBookToLibraryDM data)
+    {
+        if (!Guid.TryParse(bookId, out var parsedBookId))
+        {
+            return BadRequest("Invalid book id");
+        }
+        
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return BadRequest("User not found");
+
+        var library = await _context.Libraries.WherePublicIdIs(data.LibraryId)
+            .FirstOrDefaultAsync();
+
+        if (library == null) return BadRequest("Library not found");
+
+        if (library.UserId != user.Id) return BadRequest("Library does not belong to user");
+
+        var book = await _context.Books.WherePublicIdIs(parsedBookId)
+            .FirstOrDefaultAsync();
+
+        if (book == null) return BadRequest("Book not found");
+
+        var libraryBook = new LibraryBook
+        {
+            BookId = book.Id,
+            LibraryId = library.Id,
+            Status = BookStatus.Unread,
+            UserId = user.Id
+
+        };
+
+        _context.LibraryBooks.Add(libraryBook);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }

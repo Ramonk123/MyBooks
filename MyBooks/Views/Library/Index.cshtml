@@ -52,7 +52,6 @@
     }
 
     function openEditLibraryModal(id) {
-        console.log('called', id)
 
         const options = {
             method: 'GET',
@@ -87,7 +86,6 @@
     }
     
     function editLibrary() {
-        console.log('editLibrary called');
         name = $('#editLibraryName').val();
         id = $('#editLibraryId').val();
         
@@ -124,7 +122,6 @@
     
     function submitCreateLibraryForm() {
         const name = $('#libraryName').val();
-        console.log(name);
 
         fetch('/Library/Add', {
             method: 'POST',
