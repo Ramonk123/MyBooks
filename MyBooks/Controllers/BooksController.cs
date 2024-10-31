@@ -154,4 +154,23 @@ public class BooksController : Controller
 
         return Ok();
     }
+
+    [HttpDelete(Routes.Book.Delete)]
+    public async Task<IActionResult> DeleteBookFromLibrary([FromBody] DeleteBookFromLibraryVM data)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null) return BadRequest("User not found");
+
+        var libraryBook = await _context.LibraryBooks.Where(lb => lb.UserId == user.Id
+            && lb.Book.PublicId == data.BookId
+            && lb.Library.PublicId == data.LibraryId)
+            .SingleOrDefaultAsync();
+
+        if (libraryBook == null) return BadRequest("Book not found in library");
+
+        _context.LibraryBooks.Remove(libraryBook);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
 }

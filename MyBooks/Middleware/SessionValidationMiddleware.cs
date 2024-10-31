@@ -32,7 +32,7 @@ public class SessionValidationMiddleware
             _logger.LogWarning("User session is missing or expired.");
 
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("User session has expired.");
+            context.Response.Redirect($"/Account/Login/");
             return;
         }
 

@@ -3,13 +3,13 @@
 <div class="card shadow-lg">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">@Model.Name</h5>
-        <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button>
+        @* <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button> *@
     </div>
     <div class="card-body">
         <div class="list-group">
             @foreach (var book in Model.Books)
             {
-                <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="list-group-item d-flex justify-content-between align-items-center" id="@book.BookId">
                     <div class="d-flex align-items-center">
                         <img src="@book.ThumbnailURL" class="rounded mr-3" width="80" height="120" alt="Book Thumbnail">
                         <div>
@@ -18,12 +18,43 @@
                             <p class="mb-1"><strong>Status:</strong> Unread</p>
                         </div>
                     </div>
-                    <div class="ml-auto">
+                    <div class="ml-auto" id="@book.BookId.ToString()">
                         <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                        <button class="btn btn-outline-danger btn-sm" onclick="removeBook(@book.BookId)">Remove</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeBook('@book.BookId')">Remove</button>
                     </div>
                 </div>
             }
         </div>
     </div>
 </div>
+
+<script>
+    function removeBook(bookId) {
+        const libraryId = "@Model.LibraryId";
+        console.log(bookId)
+        console.log(libraryId)
+        
+        const options = {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                BookId: bookId,
+                LibraryId: libraryId
+            })
+        };
+        
+        fetch('/Books/Delete', options)        
+        .then(res => {
+            if (!res.ok) {
+                res.text().then(data => {
+                    console.log(data);
+                });
+            } else {
+                const book = document.getElementById(bookId);
+                book.remove();
+            }
+        })
+    }
+</script>

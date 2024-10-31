@@ -26,5 +26,6 @@ public static class Routes
         public const string Popular = $"{Base}/Popular";
         public const string AddBookToLibrary = $"{Base}/Add/{{bookId}}";
         public const string Search = $"{Base}/Search/{{query}}";
+        public const string Delete = $"{Base}/Delete";
     }
 }
