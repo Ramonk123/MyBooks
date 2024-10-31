@@ -13,7 +13,7 @@ public class Library
     public LibraryType Type { get; set; }
     public ICollection<LibraryBook> LibraryBooks { get; set; }
 
-    public static List<Library> createDefaultLibraries(User user)
+    public static List<Library> CreateDefaultLibraries(User user)
     {
         return new List<Library>()
         {

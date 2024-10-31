@@ -83,7 +83,7 @@ namespace MyBooks.Controllers
                 FullName = data.FullName,
             };
 
-            var defaultLibraries = Library.createDefaultLibraries(user);
+            var defaultLibraries = Library.CreateDefaultLibraries(user);
 
             
             var result = await _userManager.CreateAsync(user, data.Password);

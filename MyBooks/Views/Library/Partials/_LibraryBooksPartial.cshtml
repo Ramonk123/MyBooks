@@ -1,9 +1,16 @@
+@using Data.Data.Enums
 @model MyBooks.Models.Library.LibraryVM
 
 <div class="card shadow-lg">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">@Model.Name</h5>
-        @* <button class="btn btn-primary btn-sm" onclick="openAddBookModal()">Add Book</button> *@
+        <div class="flex-end">
+            <button class="btn btn-secondary" onclick="">Add Book</button>
+            @if (Model.Type == LibraryType.Custom)
+            {
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target=".confirm-delete-library">Delete library</button>
+            }
+        </div>
     </div>
     <div class="card-body">
         <div class="list-group">
@@ -20,7 +27,7 @@
                     </div>
                     <div class="ml-auto" id="@book.BookId.ToString()">
                         <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
-                        <button class="btn btn-outline-danger btn-sm" onclick="removeBook('@book.BookId')">Remove</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="$()">Remove</button>
                     </div>
                 </div>
             }
@@ -28,7 +35,45 @@
     </div>
 </div>
 
+<div class="modal fade confirm-delete-library" style="display: none" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Delete library</h2>
+            </div>
+            <div class="modal-body">
+                Are you sure you wish to delete library @Model.Name?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-danger" onclick="deleteLibrary('@Model.LibraryId')">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    function deleteLibrary(libraryId) {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }
+        
+        fetch("Library/Delete/" + libraryId, options)
+        .then(res => {
+            if (!res.ok) {
+                res.text().then(data => {
+                    console.log(data);
+                });
+            } else {
+                window.location.href = "/Library";
+            }
+        })
+    }
+    
     function removeBook(bookId) {
         const libraryId = "@Model.LibraryId";
         console.log(bookId)
@@ -57,4 +102,6 @@
             }
         })
     }
+
+
 </script>

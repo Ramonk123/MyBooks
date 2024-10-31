@@ -76,14 +76,34 @@
         deleteLibrarySubmit.on('click', deleteLibrary);
 
     }
-    
+
     function addLibraryToView(id, name) {
         $('#addLibraryModal').modal('hide');
-     
+
+        // Add the new library button to the library list
         const libraryDiv = $(".libraries");
-        libraryDiv.append(`<a id="${id}" href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">${name}</a>`);
-        
+        libraryDiv.append(`
+        <a id="${id}" href="#" class="library-button list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            ${name}
+        </a>
+    `);
+
+        $(`#${id}`).on('click', function() {
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html'
+                }
+            };
+            fetch('Library/GetLibrary/' + id, options)
+                .then(res => res.text())
+                .then(data => {
+                    $('.books').html(data);
+                })
+                .catch(err => console.log(err));
+        });
     }
+
     
     function editLibrary() {
         name = $('#editLibraryName').val();

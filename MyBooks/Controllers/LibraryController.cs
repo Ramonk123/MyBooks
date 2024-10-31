@@ -176,11 +176,33 @@ public class LibraryController : Controller
     [HttpDelete(Routes.Library.Delete)]
     public async Task<IActionResult> DeleteLibrary([FromRoute] Guid id)
     {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return BadRequest("User not found");
+        }
+        
+        var dbUser = await _context.Users.Where(u => u.Id == user.Id).SingleOrDefaultAsync();
+
+        if (dbUser == null)
+        {
+            return BadRequest("User not found");
+        }
+
         var library = await _context.Libraries
             .WherePublicIdIs(id)
             .SingleOrDefaultAsync();
 
-        if (library == null) return BadRequest();
+        if (library == null)
+        {
+            return BadRequest();
+        }
+
+        if (library.UserId != dbUser.Id)
+        {
+            return BadRequest("User not allowed to delete this library");
+        }
 
         _context.Libraries.Remove(library);
 
