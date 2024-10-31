@@ -12,7 +12,7 @@ namespace PopularityService
 
         public List<BookPopularity> GetPopularBooks()
         {
-            lock (_lock) // Ensure thread-safe access
+            lock (_lock)
             {
                 return _popularityList.OrderByDescending(b => b.PopularityScore).ToList();
             }

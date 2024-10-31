@@ -45,6 +45,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Data\Data.csproj" />
       <ProjectReference Include="..\PopularityService\PopularityService.csproj" />
+      <ProjectReference Include="..\RatingService\RatingService.csproj" />
     </ItemGroup>
 
 </Project>

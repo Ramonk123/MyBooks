@@ -8,6 +8,7 @@ public class BookDetailVM
     public string ISBN { get; set; }
     public string Description { get; set; }
     public string ThumbnailUrl { get; set; }
+    public double Rating { get; set; }
 
     public string? Library { get; set; }
     public List<ReviewVM>? Reviews { get; set; }

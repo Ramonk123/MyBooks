@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
 using MyBooks.Models.Book;
 using MyBooks.Models.Shared;
+using RatingService;
 
 namespace MyBooks.Controllers;
 
@@ -17,15 +18,18 @@ public class BooksController : Controller
     private readonly MyBooksDbContext _context;
     private readonly ILogger<BooksController> _logger;
     private readonly UserManager<User> _userManager;
+    private readonly RatingQueryService _ratingService;
 
     public BooksController(
         MyBooksDbContext context,
         UserManager<User> userManager,
-        ILogger<BooksController> logger)
+        ILogger<BooksController> logger,
+        RatingQueryService ratingService)
     {
         _context = context;
         _userManager = userManager;
         _logger = logger;
+        _ratingService = ratingService;
     }
 
 
@@ -50,6 +54,7 @@ public class BooksController : Controller
                 ISBN = b.Isbn,
                 Description = b.Description,
                 ThumbnailUrl = b.ThumbnailURL,
+                Rating = _ratingService.GetRating(b.Id),
                 Library = b.LibraryBooks
                     .Where(lb => lb.UserId == _userManager.GetUserId(User))
                     .Select(lb => lb.Library.Name)

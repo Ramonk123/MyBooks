@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MyBooks.Middleware;
 using MyBooks.Services;
 using PopularityService;
+using RatingService;
 
 
 namespace MyBooks
@@ -26,6 +27,10 @@ namespace MyBooks
 
                 services.AddSingleton(new List<BookPopularity>());
                 services.AddSingleton<PopularityQueryService>();
+                services.AddSingleton(new List<RatingListItem>());
+
+                services.AddSingleton<RatingQueryService>();
+                services.AddHostedService<RatingHostedService>();
                 services.AddHostedService<PopularityHostedService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
