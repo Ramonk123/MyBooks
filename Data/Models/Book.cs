@@ -16,4 +16,5 @@ public class Book
     public Author Author { get; set; }
     public string ThumbnailURL { get; set; }
     public ICollection<LibraryBook> LibraryBooks { get; set; }
+    public virtual List<Review> Reviews { get; set; }
 }

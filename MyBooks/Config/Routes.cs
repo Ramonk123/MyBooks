@@ -28,4 +28,10 @@ public static class Routes
         public const string Search = $"{Base}/Search/{{query}}";
         public const string Delete = $"{Base}/Delete";
     }
+
+    public static class Review
+    {
+        public const string Base = "/Reviews";
+        public const string Create = $"{Base}/Create";
+    }
 }

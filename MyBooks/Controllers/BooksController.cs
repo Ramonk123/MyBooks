@@ -53,7 +53,15 @@ public class BooksController : Controller
                 Library = b.LibraryBooks
                     .Where(lb => lb.UserId == _userManager.GetUserId(User))
                     .Select(lb => lb.Library.Name)
-                    .FirstOrDefault()
+                    .FirstOrDefault(),
+                Reviews = b.Reviews.Select(r => new ReviewVM
+                {
+                    Id = r.PublicId,
+                    Content = r.Content,
+                    Rating = r.Rating,
+                    CreatedAt = r.CreatedAt,
+                    User = r.User.UserName ?? "Anonymous"
+                }).ToList()
             })
             .FirstOrDefaultAsync();
 
@@ -163,8 +171,8 @@ public class BooksController : Controller
         if (user == null) return BadRequest("User not found");
 
         var libraryBook = await _context.LibraryBooks.Where(lb => lb.UserId == user.Id
-            && lb.Book.PublicId == data.BookId
-            && lb.Library.PublicId == data.LibraryId)
+                                                                  && lb.Book.PublicId == data.BookId
+                                                                  && lb.Library.PublicId == data.LibraryId)
             .SingleOrDefaultAsync();
 
         if (libraryBook == null) return BadRequest("Book not found in library");

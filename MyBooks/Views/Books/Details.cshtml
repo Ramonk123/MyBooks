@@ -1,5 +1,7 @@
 @model MyBooks.Models.Book.BookDetailVM
 
+<div id="alerts" class="alert" role="alert"></div>
+
 <div class="container mt-5 book-detail-container" id="@Model.PublicId">
     <div id="addBookModal" class="modal fade" tabindex="-1"></div>
     <div class="row">
@@ -37,8 +39,8 @@
                     </p>
                     <p class="book-description">@Model.Description</p>
                     <div class="actions mt-4">
-                        <button class="btn btn-primary btn-lg">Add to Library</button>
-                        <a href="#" class="btn btn-outline-secondary btn-lg ml-2">View Reviews</a>
+                        <button id="addToLibraryBtn" class="btn btn-primary btn-lg">Add to Library</button>
+                        <a href="#" class="btn btn-outline-secondary btn-lg ml-2" data-bs-toggle="modal" data-bs-target="#createReviewModal">Write review</a>
                     </div>
                 </div>
             </div>
@@ -46,10 +48,80 @@
     </div>
 </div>
 
+<div class="modal fade" id="createReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Write your review</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating">
+                    <textarea id="review" cols="30" rows="10" class="form-control" placeholder="Write your review..."></textarea>
+                </div>
+                <div class="my-3">
+                    <label class="d-block">Rating:</label>
+                    <div class="rating d-flex justify-content-center">
+                        <input type="radio" id="star5" name="rating" value="5"/>
+                        <label for="star5" title="5 stars">&#9733;</label>
+                        <input type="radio" id="star4" name="rating" value="4"/>
+                        <label for="star4" title="4 stars">&#9733;</label>
+                        <input type="radio" id="star3" name="rating" value="3"/>
+                        <label for="star3" title="3 stars">&#9733;</label>
+                        <input type="radio" id="star2" name="rating" value="2"/>
+                        <label for="star2" title="2 stars">&#9733;</label>
+                        <input type="radio" id="star1" name="rating" value="1"/>
+                        <label for="star1" title="1 star">&#9733;</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="submitReview()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-lg mt-4">
+    <div class="card-header text-white">
+        <h3 class="mb-0">Reviews</h3>
+    </div>
+    <div class="card-body">
+        <div class="review-container">
+            @if (@Model.Reviews.Count > 0)
+            {
+            @foreach (var review in @Model.Reviews)
+            {
+            <div class="review-card">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <strong>@review.User</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">@review.CreatedAt.ToLongDateString()</p>
+                        <p class="text-muted small mb-2">Rating: @review.Rating / 5</p>
+                        <p>@review.Content</p>
+                    </div>
+                </div>
+            </div>
+            }
+            }
+            else
+            {
+            <div class="alert alert-info w-100 text-center" role="alert">
+                No reviews available for this book
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
 <script>
+    
     $(document).ready(() => {
         const publicId = $('.book-detail-container').attr('id');
-        $('.btn-primary').click(() => {
+        $('#addToLibraryBtn').click(() => {
             fetch(`/Books/Add/${publicId}`)
                 .then(response => response.text())
                 .then(data => {
@@ -59,10 +131,137 @@
                     modal.modal('show');
                 });
         });
+        
+        $('.rating').click((e) => {
+            const ratingButtons = $('.rating');
+            ratingButtons.removeClass('selected');
+            const selectedRating = e.target;
+            selectedRating.classList.add('selected');
+            console.log(selectedRating);
+        });
     });
+
+    function submitReview() {
+        const review = $('#review').val();
+        const rating = $('.selected').attr('value');
+
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                BookId: '@Model.PublicId',
+                Content: review,
+                Rating: rating
+            })
+        }
+
+        fetch('/Reviews/Create', options)
+            .then(res => {
+                const alerts = $('#alerts');
+                const reviewModal = $('#createReviewModal');
+                reviewModal.modal('hide'); 
+
+                if (res.ok) {
+                    alerts.removeClass('alert-danger').addClass('alert-success');
+                    alerts.html('Review submitted successfully');
+                } else {
+                    alerts.removeClass('alert-success').addClass('alert-danger');
+                    alerts.html('An error occurred while submitting the review');
+                }
+
+                alerts.css('display', 'block').css('opacity', '1');
+
+                
+                setTimeout(() => {
+                    alerts.css('opacity', '0');
+                    setTimeout(() => alerts.css('display', 'none'), 300); 
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                const alerts = $('#alerts');
+                alerts.removeClass('alert-success').addClass('alert-danger');
+                alerts.html('Network error. Please try again later.');
+
+                
+                alerts.css('display', 'block').css('opacity', '1');
+
+                
+                setTimeout(() => {
+                    alerts.css('opacity', '0');
+                    setTimeout(() => alerts.css('display', 'none'), 300); 
+                }, 1500);
+            });
+    }
+
+
+
+
 </script>
 
 <style>
+    .review-container {
+        display: flex;
+        flex-wrap: nowrap; /* Prevent wrapping of items */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        max-height: 300px; /* Adjust height to fit 3-4 reviews */
+        padding: 1rem; /* Optional padding */
+    }
+
+    .review-card {
+        flex: 0 0 250px; /* Each review card takes a fixed width of 250px */
+        margin: 0 10px; /* Space between cards */
+    }
+
+    /* Additional styles for review cards */
+    .review-card .card {
+        height: 100%; /* Ensure the card takes the full height of the container */
+    }
+
+    #alerts {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        width: 300px;
+        display: none;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+
+    .rating input[type="radio"] {
+        display: none;
+    }
+
+    .rating label {
+        font-size: 2rem;
+        color: #dcdcdc;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffd700;
+    }
+
+    .rating input[type="radio"]:checked ~ label {
+        color: #ffd700;
+    }
+
+
     .book-detail-container {
         background-color: #f8f9fa;
         padding: 2rem;

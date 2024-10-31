@@ -5,8 +5,7 @@
         <h3 class="mx-2 mb-0 card-title" style="color: var(--neutral-color)">My Books Collection</h3>
         <div class="quick-actions">
             <input type="text" id="search-book-input" placeholder="Search...">
-            <a href="#" class="btn btn-outline-light btn-sm mx-2 btn-add-book d-flex align-items-center">Add Book</a>
-            <a class="btn btn-outline-light btn-sm mx-2 d-flex align-items-center" href="@Url.Action("Index", "Library")">View All</a>
+            <a class="btn btn-outline-light btn-sm d-flex align-items-center" href="@Url.Action("Index", "Library")">View All</a>
         </div>
     </div>
     <input type="hidden" value="@Model.LibraryId" id="library-id" class="form form-control"/>
@@ -99,16 +98,6 @@
         background-color: var(--primary-color); /* Muted green-grey */
         color: var(--neutral-color); /* Light greyish white */
         border-color: var(--primary-color); /* Muted green-grey */
-    }
-
-    .btn-add-book {
-        transition: background-color 0.3s ease;
-        background-color: var(--accent-color); /* Burnt orange/clay */
-        color: var(--neutral-color); /* Light greyish white */
-    }
-
-    .btn-add-book:hover {
-        background-color: #b66f3d; /* Darker burnt orange */
     }
 
     .quick-actions {

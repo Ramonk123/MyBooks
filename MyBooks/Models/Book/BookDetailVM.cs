@@ -10,4 +10,14 @@ public class BookDetailVM
     public string ThumbnailUrl { get; set; }
 
     public string? Library { get; set; }
+    public List<ReviewVM>? Reviews { get; set; }
+}
+
+public class ReviewVM
+{
+    public Guid Id { get; set; }
+    public string Content { get; set; }
+    public double Rating { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public string User { get; set; }
 }

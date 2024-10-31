@@ -3,17 +3,20 @@ using System;
 using Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MyBooks.Migrations
+namespace Data.Migrations
 {
     [DbContext(typeof(MyBooksDbContext))]
-    partial class MyBooksDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031134459_AddReviewTable")]
+    partial class AddReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +42,7 @@ namespace MyBooks.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Data.Models.Book", b =>
@@ -90,7 +93,7 @@ namespace MyBooks.Migrations
 
                     b.HasIndex("LibraryId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Data.Models.Library", b =>
@@ -120,7 +123,7 @@ namespace MyBooks.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Libraries", (string)null);
+                    b.ToTable("Libraries");
                 });
 
             modelBuilder.Entity("Data.Models.LibraryBook", b =>
@@ -152,7 +155,7 @@ namespace MyBooks.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LibraryBooks", (string)null);
+                    b.ToTable("LibraryBooks");
                 });
 
             modelBuilder.Entity("Data.Models.Review", b =>
@@ -189,7 +192,7 @@ namespace MyBooks.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Data.Models.User", b =>

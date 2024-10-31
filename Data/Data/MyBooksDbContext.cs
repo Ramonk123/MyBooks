@@ -6,18 +6,21 @@ namespace Data.Data;
 
 public class MyBooksDbContext : IdentityDbContext<User>
 {
-    
-    
     public MyBooksDbContext(DbContextOptions<MyBooksDbContext> options) : base(options)
     {
-        
     }
+
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<Library> Libraries { get; set; }
+    public DbSet<LibraryBook> LibraryBooks { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Models.Library>(entity =>
+        builder.Entity<Library>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.UserId).HasColumnName("UserId");
@@ -26,10 +29,4 @@ public class MyBooksDbContext : IdentityDbContext<User>
                 .HasForeignKey(e => e.UserId);
         });
     }
-    
-    public DbSet<Book> Books { get; set; }
-    public DbSet<Author> Authors { get; set; }
-    public DbSet<Library> Libraries { get; set; }
-    public DbSet<LibraryBook> LibraryBooks { get; set; }
-    
 }
