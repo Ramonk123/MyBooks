@@ -5,8 +5,8 @@
         <div class="modal-header">
             <h1>Add your book to a library</h1>
         </div>
-        <div class="alert alert-danger fade show my-3" style="display: none" role="alert">
-        </div>
+        <div class="alert alert-danger fade show my-3" style="display: none" role="alert"> </div>
+        <div class="alert alert-success fade show my-3" style="display: none" role="alert"></div>
         <div class="modal-body">
             <div class="form my-2">
                 <label for="selectedLibrary">Select the library you want to add the book to</label>
@@ -18,14 +18,15 @@
                 </select>
                 <button class="btn btn-primary my-2" type="button" onclick="addBookToLibrary()">Add book</button>
             </div>
-
         </div>
     </div>
 </div>
 
 <script>
     const addBookToLibrary = () => {
-        const alert = $('.alert');
+        const alertDanger = $('.alert-danger');
+        const alertSuccess = $('.alert-success');
+        
         const selectedLibrary = $('#selectedLibrary').val().toString();
         const bookId = $('.modal-dialog').attr('id');
         console.log(bookId);
@@ -45,9 +46,18 @@
             if (!res.ok) {
                 res.text().then(data => {
                     console.log(data);
-                    alert.css('display', 'block');
-                    alert.text(data);
+                    alertDanger.css('display', 'block');
+                    alertDanger.text(data);
                 });
+            }
+            
+            if (res.ok) {
+                alertSuccess.css('display', 'block');
+                alertSuccess.text('Book added to library successfully');
+                
+                setTimeout(() => {
+                    $('.modal').modal('hide');
+                }, 1500);
             }
         });
     }

@@ -54,6 +54,7 @@ namespace MyBooks.Controllers
 
             if (result.Succeeded)
             {
+                HttpContext.Session.SetString("UserSession", "active");
                 return RedirectToAction("Index", "Overview");
             }
 

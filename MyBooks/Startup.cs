@@ -2,6 +2,7 @@ using Data.Data;
 using Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MyBooks.Middleware;
 using MyBooks.Services;
 using PopularityService;
 
@@ -75,16 +76,14 @@ namespace MyBooks
                 app.UseHsts();
             }
             
-            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            // Configure middleware order correctly
             app.UseRouting();
 
-            // Session must be used before custom middleware
             app.UseSession();
 
             app.UseAuthentication();
+            app.UseMiddleware<SessionValidationMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

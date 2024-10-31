@@ -49,7 +49,11 @@ public class BooksController : Controller
                 Author = b.Author.Name,
                 ISBN = b.Isbn,
                 Description = b.Description,
-                ThumbnailUrl = b.ThumbnailURL
+                ThumbnailUrl = b.ThumbnailURL,
+                Library = b.LibraryBooks
+                    .Where(lb => lb.UserId == _userManager.GetUserId(User))
+                    .Select(lb => lb.Library.Name)
+                    .FirstOrDefault()
             })
             .FirstOrDefaultAsync();
 
@@ -85,7 +89,7 @@ public class BooksController : Controller
     public async Task<IActionResult> AddBookToLibrary(Guid bookId)
     {
         var userId = _userManager.GetUserId(User);
-        
+
         var user = await _context.Users
             .Where(u => userId == u.Id)
             .FirstOrDefaultAsync();
@@ -112,18 +116,15 @@ public class BooksController : Controller
         return PartialView("Partials/_AddBookToLibraryPartial", new AddBookToLibraryVM
         {
             Book = book,
-            Libraries = libraries,
+            Libraries = libraries
         });
     }
 
     [HttpPost(Routes.Book.AddBookToLibrary)]
-    public async Task<IActionResult> AddBookToLibrary([FromRoute]string bookId, [FromBody] AddBookToLibraryDM data)
+    public async Task<IActionResult> AddBookToLibrary([FromRoute] string bookId, [FromBody] AddBookToLibraryDM data)
     {
-        if (!Guid.TryParse(bookId, out var parsedBookId))
-        {
-            return BadRequest("Invalid book id");
-        }
-        
+        if (!Guid.TryParse(bookId, out var parsedBookId)) return BadRequest("Invalid book id");
+
         var user = await _userManager.GetUserAsync(User);
 
         if (user == null) return BadRequest("User not found");
@@ -146,7 +147,6 @@ public class BooksController : Controller
             LibraryId = library.Id,
             Status = BookStatus.Unread,
             UserId = user.Id
-
         };
 
         _context.LibraryBooks.Add(libraryBook);

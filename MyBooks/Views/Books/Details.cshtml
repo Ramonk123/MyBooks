@@ -20,6 +20,13 @@
                 <div class="card-header text-white">
                     <h2 class="mb-0">@Model.Title</h2>
                 </div>
+
+                @if (!string.IsNullOrEmpty(Model.Library))
+                {
+                    <div class="alert alert-primary mt-3" role="alert">
+                        Book present in library: @Model.Library
+                    </div>
+                }
                 <div class="card-body">
                     <h5 class="card-title text-muted">By: @Model.Author</h5>
                     <p class="card-text">

@@ -2,7 +2,7 @@
 
 <div class="card w-100 mt-5 my-books-card shadow-lg">
     <div class="d-flex justify-content-between align-items-center card-header text-white">
-        <h3 class="mx-2 mb-0">My Books Collection</h3>
+        <h3 class="mx-2 mb-0 card-title" style="color: var(--neutral-color)">My Books Collection</h3>
         <div class="quick-actions">
             <input type="text" id="search-book-input" placeholder="Search...">
             <a href="#" class="btn btn-outline-light btn-sm mx-2 btn-add-book d-flex align-items-center">Add Book</a>
@@ -12,35 +12,35 @@
     <input type="hidden" value="@Model.LibraryId" id="library-id" class="form form-control"/>
     @if (Model.Books.Count == 0)
     {
-    <div class="card-body d-flex flex-column align-items-center mt-2">
-        <p class="text-center fs-2">You have no books in your collection.</p>
-        <a href="#" class="btn btn-primary btn-lg btn-add-book mt-3">Add First Book</a>
-    </div>
+        <div class="card-body d-flex flex-column align-items-center mt-2">
+            <p class="text-center fs-2">You have no books in your collection.</p>
+            <a href="#" class="btn btn-primary btn-lg btn-add-book mt-3">Add First Book</a>
+        </div>
     }
     else
     {
-    <div class="card-body overflow-auto">
-        <div class="list-group">
-            @foreach (var book in Model.Books)
-            {
-            <div class="list-group-item card-item mb-3 my-book-card">
-                <div class="d-flex flex-row align-items-center">
-                    <div class="image-container p-2">
-                        <img id="thumbnail" class="rounded" height="140px" width="100px" src="@book.ThumbnailUrl" alt="Book Thumbnail" />
-                    </div>
-                    <div class="details ml-3 flex-grow-1">
-                        <h5 class="mb-1 book-name">@book.Name</h5>
-                        <p class="mb-1 text-muted book-author">By @book.Author</p>
-                        <div class="d-flex justify-content-between mt-2">
-                            <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
-                            <a href="@book.DetailsUrl" class="btn btn-outline-primary">Details</a>
+        <div class="card-body overflow-auto">
+            <div class="list-group">
+                @foreach (var book in Model.Books)
+                {
+                    <div class="list-group-item card-item mb-3 my-book-card">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="image-container p-2">
+                                <img id="thumbnail" class="rounded" height="140px" width="100px" src="@book.ThumbnailUrl" alt="Book Thumbnail"/>
+                            </div>
+                            <div class="details ml-3 flex-grow-1">
+                                <h5 class="mb-1 book-name">@book.Name</h5>
+                                <p class="mb-1 text-muted book-author">By @book.Author</p>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <p class="text-muted mb-0"><strong>Status:</strong> Unread</p>
+                                    <a href="@book.DetailsUrl" class="btn btn-outline-primary">Details</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
-            }
         </div>
-    </div>
     }
 </div>
 
