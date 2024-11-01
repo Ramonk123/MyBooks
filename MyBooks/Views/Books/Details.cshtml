@@ -35,7 +35,7 @@
                         <strong>ISBN:</strong> @Model.ISBN
                     </p>
                     <div class="card-text">
-                        <strong>Rating:</strong> @Model.Rating
+                        <strong>Rating:</strong> @(double.IsNaN(Model.Rating) ? "N/A" : Model.Rating.ToString())
                     </div>
                     <p class="card-text">
                         <strong>Description:</strong>
@@ -90,34 +90,33 @@
     </div>
     <div class="card-body">
         <div class="review-container">
-            @if (@Model.Reviews.Count > 0)
+            @if (Model.Reviews.Count > 0)
             {
-            @foreach (var review in @Model.Reviews)
-            {
-            <div class="review-card">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <strong>@review.User</strong>
+                @foreach (var review in Model.Reviews)
+                {
+                    <div class="review-card">
+                        <div class="card">
+                            <div class="card-header bg-primary" style="border-top-left-radius:1rem ; border-top-right-radius: 1rem">
+                                <strong>@review.User</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-1">@review.CreatedAt.ToLongDateString()</p>
+                                <p class="text-muted small mb-2">Rating: @review.Rating / 5</p>
+                                <p>@review.Content</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted small mb-1">@review.CreatedAt.ToLongDateString()</p>
-                        <p class="text-muted small mb-2">Rating: @review.Rating / 5</p>
-                        <p>@review.Content</p>
-                    </div>
-                </div>
-            </div>
-            }
+                }
             }
             else
             {
-            <div class="alert alert-info w-100 text-center" role="alert">
-                No reviews available for this book
-            </div>
+                <div class="alert alert-info w-100 text-center" role="alert">
+                    No reviews available for this book
+                </div>
             }
         </div>
     </div>
 </div>
-
 
 
 <script>
@@ -254,6 +253,10 @@
         cursor: pointer;
         transition: color 0.2s;
     }
+    
+    .bg-primary { !important;
+        background: var(--primary-color);
+        }
 
     .rating label:hover,
     .rating label:hover ~ label {
