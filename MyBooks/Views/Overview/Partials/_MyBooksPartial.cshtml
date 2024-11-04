@@ -2,10 +2,10 @@
 
 <div class="card w-100 mt-5 my-books-card shadow-lg">
     <div class="d-flex justify-content-between align-items-center card-header text-white">
-        <h3 class="mx-2 mb-0 card-title" style="color: var(--neutral-color)">My Books Collection</h3>
+        <h3 class="mx-2 mb-0 card-title" style="color: white">My Books Collection</h3>
         <div class="quick-actions">
-            <input type="text" id="search-book-input" placeholder="Search...">
-            <a class="btn btn-outline-light btn-sm d-flex align-items-center" href="@Url.Action("Index", "Library")">View All</a>
+            <input type="text" id="search-book-input" class="form-control-sm" placeholder="Search...">
+            <a class="btn btn-outline-light" href="@Url.Action("Index", "Library")">View All</a>
         </div>
     </div>
     <input type="hidden" value="@Model.LibraryId" id="library-id" class="form form-control"/>
@@ -46,86 +46,13 @@
 <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
 
 <style>
-    .my-books-card {
-        overflow-y: auto;
-        border-radius: 0.75rem;
-        background-color: var(--background-color); /* Off-white */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-header {
-        border-top-left-radius: 0.75rem;
-        border-top-right-radius: 0.75rem;
-        padding: 1rem;
-        background-color: var(--primary-color); /* Muted green-grey */
-        color: var(--neutral-color); /* Light greyish white */
-    }
-
-    .card-item {
-        border: none;
-        padding: 1.5rem;
-        transition: background-color 0.3s ease;
-        border-radius: 0.5rem;
-        background-color: var(--neutral-color); /* Light greyish white */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-item:hover {
-        background-color: var(--border-color); /* Light grey */
-    }
-
-    .image-container img {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-
-    .image-container img:hover {
-        transform: scale(1.05);
-    }
-
-    .details h5 {
-        font-weight: bold;
-        color: var(--text-color); /* Dark grey */
-    }
-
-    .details .btn-outline-primary {
-        border-color: var(--primary-color); /* Muted green-grey */
-        color: var(--primary-color); /* Muted green-grey */
-        transition: all 0.3s ease;
-    }
-
-    .details .btn-outline-primary:hover {
-        background-color: var(--primary-color); /* Muted green-grey */
-        color: var(--neutral-color); /* Light greyish white */
-        border-color: var(--primary-color); /* Muted green-grey */
-    }
-
     .quick-actions {
         display: flex;
-        align-items: center;
+        flex-direction: row;
     }
-
-    .quick-actions input {
-        border-radius: 0.25rem;
-        padding: 0.5rem;
-        border: 1px solid var(--border-color); /* Light grey for borders */
-        background-color: var(--neutral-color); /* Light greyish white */
-        color: var(--text-color); /* Dark grey */
-    }
-
+    
     .quick-actions a {
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .btn-outline-light {
-        border-color: var(--neutral-color); /* Light greyish white */
-        color: var(--neutral-color); /* Light greyish white */
-    }
-
-    .btn-outline-light:hover {
-        background-color: var(--neutral-color); /* Light greyish white */
-        color: var(--primary-color); /* Muted green-grey */
+        align-self: center;
     }
 
 </style>

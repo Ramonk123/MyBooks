@@ -5,47 +5,47 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>MyBooks</RootNamespace>
-      <UserSecretsId>b12abcc4-b52b-4cf7-879f-7e95b95cba36</UserSecretsId>
-  </PropertyGroup>
+        <UserSecretsId>b12abcc4-b52b-4cf7-879f-7e95b95cba36</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="bootstrap" Version="5.3.3" />
-      <PackageReference Include="FontAwesome" Version="4.7.0" />
-      <PackageReference Include="jQuery" Version="3.7.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-      <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+        <PackageReference Include="FontAwesome" Version="4.7.0"/>
+        <PackageReference Include="jQuery" Version="3.7.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Libraries\" />
-      <Folder Include="Migrations\" />
+        <Folder Include="Libraries\"/>
+        <Folder Include="Migrations\"/>
+        <Folder Include="wwwroot\lib\bootstrap\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\fonts\fontawesome-webfont.eot" />
-      <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
-      <None Include="wwwroot\fonts\fontawesome-webfont.ttf" />
-      <None Include="wwwroot\fonts\fontawesome-webfont.woff" />
-      <None Include="wwwroot\fonts\fontawesome-webfont.woff2" />
-      <None Include="wwwroot\fonts\FontAwesome.otf" />
+        <None Include="wwwroot\fonts\fontawesome-webfont.eot"/>
+        <None Include="wwwroot\fonts\fontawesome-webfont.svg"/>
+        <None Include="wwwroot\fonts\fontawesome-webfont.ttf"/>
+        <None Include="wwwroot\fonts\fontawesome-webfont.woff"/>
+        <None Include="wwwroot\fonts\fontawesome-webfont.woff2"/>
+        <None Include="wwwroot\fonts\FontAwesome.otf"/>
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\Books\Popups\_AddBookPopup.cshtml" />
+        <_ContentIncludedByDefault Remove="Views\Books\Popups\_AddBookPopup.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Views\Shared\Popups\_AddBookPopup.cshtml" />
+        <AdditionalFiles Include="Views\Shared\Popups\_AddBookPopup.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Data\Data.csproj" />
-      <ProjectReference Include="..\PopularityService\PopularityService.csproj" />
-      <ProjectReference Include="..\RatingService\RatingService.csproj" />
+        <ProjectReference Include="..\Data\Data.csproj"/>
+        <ProjectReference Include="..\PopularityService\PopularityService.csproj"/>
+        <ProjectReference Include="..\RatingService\RatingService.csproj"/>
     </ItemGroup>
 
 </Project>
