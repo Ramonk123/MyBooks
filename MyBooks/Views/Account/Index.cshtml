@@ -1,0 +1,25 @@
+@model MyBooks.Models.Account.ProfileVM
+
+<div class="container p-2 m-2">
+    <div class="card">
+        <div class="card-header">
+            <h2>My profile</h2>
+        </div>
+        <div class="card-body d-flex flex-row">
+            <div class="image-card d-flex flex-column justify-content-center">
+                <img src="~/img/placeholder_profile_picture.jpg" alt="profile picture" class="rounded mx-2 align-self-center" width="80px" height="80px"/>
+                <input type="file" class="form-control-sm my-2">Change picture</input>
+            </div>
+            <div class="information d-flex flex-column w-100 ml-5">
+                <div class="field d-flex flex-row justify-content-between">
+                    <p>Username:</p>
+                    <p>@Model.UserName</p>
+                </div>
+                <div class="field  d-flex flex-row justify-content-between">
+                    <p>Email address:</p>
+                    <p>@Model.Email</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

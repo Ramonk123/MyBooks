@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="bootstrap" Version="5.3.3" />
         <PackageReference Include="FontAwesome" Version="4.7.0"/>
         <PackageReference Include="jQuery" Version="3.7.1"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
@@ -23,6 +22,7 @@
     <ItemGroup>
         <Folder Include="Libraries\"/>
         <Folder Include="Migrations\"/>
+        <Folder Include="wwwroot\img\" />
         <Folder Include="wwwroot\lib\bootstrap\"/>
     </ItemGroup>
 
