@@ -8,6 +8,7 @@ public static class Routes
         public const string Login = $"{Base}/Login";
         public const string Register = $"{Base}/Register";
         public const string Logout = $"{Base}/Logout";
+        public const string UpdateProfilePicture = $"{Base}/Update";
     }
 
     public static class Library

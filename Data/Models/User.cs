@@ -8,4 +8,5 @@ public class User : IdentityUser
     [MaxLength(48)]
     public string FullName { get; set; }
     public ICollection<Library> Libraries { get; set; }
+    public string? Base64ProfileImage { get; set; }
 }

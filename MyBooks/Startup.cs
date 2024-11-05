@@ -65,6 +65,7 @@ namespace MyBooks
             services.AddLogging();
             services.AddHttpClient();
             services.AddScoped<OpenLibaryService>();
+            services.AddScoped<ImageService>();
             services.AddControllersWithViews();
         }
 
