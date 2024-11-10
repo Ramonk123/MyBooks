@@ -64,10 +64,12 @@ public static class BookSeeder
             await context.Books.AddRangeAsync(newBooks);
             await context.SaveChangesAsync();
             logger.LogInformation("Successfully seeded books to the database.");
+            Environment.Exit(0);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while saving books to the database.");
+            Environment.Exit(1);
         }
     }
 }
