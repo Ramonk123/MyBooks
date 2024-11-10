@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mvcapp:
+    build:
+      context: ./MyBooks     # The directory where your MVC app is located
+      dockerfile: Dockerfile  # Path to Dockerfile for MVC app
+    ports:
+      - "5000:80"  # Exposes port 80 in the container to port 5000 on the host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=mybooksdb;Username=postgres;Password=SuperDuperS3crE3tPas5w0rD
+    depends_on:
+      - db  # Ensures db starts before mvcapp
+
+  db:
+    image: postgres:14  # Use official PostgreSQL image
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=SuperDuperS3crE3tPas5w0rD  # Password for database
+      - POSTGRES_DB=mybooksdb  # Database name
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persist database data
+
+volumes:
+  postgres-data:
