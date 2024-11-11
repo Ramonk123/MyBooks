@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card-header {
+  background-color: #0d6efd !important;
+  text-align: center;
+  color: white;
+}

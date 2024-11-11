@@ -35,7 +35,10 @@
                         <strong>ISBN:</strong> @Model.ISBN
                     </p>
                     <div class="card-text">
-                        <strong>Rating:</strong> @(double.IsNaN(Model.Rating) ? "N/A" : Model.Rating.ToString())
+                        <strong>Rating:</strong> @foreach(var star in Enumerable.Range(0, Model.Rating))
+                        {
+                            <span class="stars">&#9733;</span>
+                        }
                     </div>
                     <p class="card-text">
                         <strong>Description:</strong>
@@ -101,7 +104,13 @@
                             </div>
                             <div class="card-body">
                                 <p class="text-muted small mb-1">@review.CreatedAt.ToLongDateString()</p>
-                                <p class="text-muted small mb-2">Rating: @review.Rating / 5</p>
+                                <p class="text-muted small mb-2">
+                                    
+                                    @for (int i = 0; i < Model.Rating; i++)
+                                    {
+                                        <span class="stars">&#9733;</span>
+                                    }
+                                </p>
                                 <p>@review.Content</p>
                             </div>
                         </div>
@@ -266,7 +275,10 @@
     .rating input[type="radio"]:checked ~ label {
         color: #ffd700;
     }
-
+    
+    .stars {
+        color: #ffd700;
+    }
 
     .book-detail-container {
         background-color: #f8f9fa;

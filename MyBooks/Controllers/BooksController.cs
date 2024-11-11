@@ -54,7 +54,7 @@ public class BooksController : Controller
                 ISBN = b.Isbn,
                 Description = b.Description,
                 ThumbnailUrl = b.ThumbnailURL,
-                Rating = _ratingService.GetRating(b.Id),
+                Rating =  _ratingService.GetRatingVM(b.Id),
                 Library = b.LibraryBooks
                     .Where(lb => lb.UserId == _userManager.GetUserId(User))
                     .Select(lb => lb.Library.Name)
@@ -63,7 +63,7 @@ public class BooksController : Controller
                 {
                     Id = r.PublicId,
                     Content = r.Content,
-                    Rating = r.Rating,
+                    Rating = (int) double.Round(r.Rating),
                     CreatedAt = r.CreatedAt,
                     User = r.User.UserName ?? "Anonymous"
                 }).ToList()

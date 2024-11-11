@@ -2,20 +2,21 @@
 
 <div class="container mt-5 w-100">
     <div class="card shadow-lg p-4">
-        <h2 class="text-center mb-4">Popular Books</h2>
+        <h2 class="text-center mb-4">Popular books</h2>
         <div class="position-relative">
-            <!-- Wrapper for cards inside a card -->
             <div class="book-carousel d-flex justify-content-center">
-                <!-- Book card items -->
                 @foreach (var book in Model)
                 {
-                    <div class="card book-card shadow-sm mx-3">
-                        <img src="@book.ThumbnailUrl" class="card-img-top" alt="Book 1">
-                        <div class="card-body text-center">
-                            <h6 class="card-title">@book.Title</h6>
-                            <p class="card-text">@book.Author</p>
+                    <a href="@Url.Action("Details", "Books", new {id = book.BookId})">
+                        <div class="card book-card shadow-sm mx-3">
+                            <img src="@book.ThumbnailUrl" class="card-img-top" alt="Book 1">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">@book.Title</h6>
+                                <p class="card-text">@book.Author</p>
+                            </div>
                         </div>
-                    </div> 
+                    </a>
+                   
                 }
             </div>
 
@@ -60,7 +61,7 @@
 
     .btn.prev-btn,
     .btn.next-btn {
-        background-color: #7D8B77;
+        background-color: #007bff;
         color: white;
         border-radius: 50%;
         font-size: 24px;
@@ -74,7 +75,7 @@
 
     .btn.prev-btn:hover,
     .btn.next-btn:hover {
-        background-color: #7D8B77;
+        background-color: #007bff;
     }
 
     .dot {
@@ -96,7 +97,7 @@
         width: 100%;
     }
 
-    .btn {
+    .prev-btn, .next-btn {
         top: 50%;
         transform: translateY(-50%);
     }
