@@ -3,12 +3,14 @@
     ViewData["HideSearchbar"] = true;
 }
 
-<div class="search-container mt-5">
+<div class="search-container mt-5 input-group form-control">
     <input type="text" id="search-book-input" class="form-control search-input" placeholder="Search for a book..." onchange="searchBook()">
-
-    <div class="results mt-4">
+    <div class="input-group-append">
+        <button type="button" id="search-book-button" class="form-control btn btn-primary" onclick="searchBook($('#search-book-input').val())">Search</button>
     </div>
 </div>
+<div class="results mt-4"> </div>
+
 
 <script>
     $(document).ready(function () {
@@ -84,9 +86,9 @@
             const contentContainer = $('<div class="content-container d-flex"></div>');
 
             const thumbnail = book.thumbnailURL
-                ? `<img src="${book.thumbnailURL}" alt="${book.title} thumbnail" class="book-thumbnail" loading="lazy">`
-                : '<img src="placeholder.jpg" alt="placeholder image" class="book-thumbnail">';
-
+                ? `<img src="${book.thumbnailURL}" alt="${book.title} thumbnail" class="book-thumbnail" loading="lazy" onerror="this.onerror=null;this.src='/img/book-placeholder.jpg';">`
+                : '<img src="/img/book-placeholder.jpg" alt="placeholder image" class="book-thumbnail">';
+                
             const averageRating = book.averageRating || "N/A";
             const releaseYear = book.releaseYear || "Unknown";
             const subtitle = book.subtitle || "";
@@ -121,24 +123,11 @@
 </script>
 
 <style>
-    .search-input {
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 16px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    
+    .search-container {
+        max-width: 800px;
+        justify-content: center;
     }
-
-    .search-input:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
-    }
-
     .results {
         display: flex;
         flex-direction: column;

@@ -51,8 +51,8 @@ namespace MyBooks
             {
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Align with session expiration
-                options.SlidingExpiration = true; // Ensure the cookie expiration is renewed with each request
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
             });
 
             services.AddDistributedMemoryCache();

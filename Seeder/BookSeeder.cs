@@ -24,10 +24,16 @@ public static class BookSeeder
             }
 
             var authors = await context.Authors.ToListAsync();
+            var existingBooks = await context.Books.ToListAsync();
             var newBooks = new List<Book>();
 
             foreach (var book in books)
             {
+                if (existingBooks.Any(b => b.Isbn == book.Isbn))
+                {
+                    logger.LogInformation("Book with ISBN {Isbn} already exists in the database.", book.Isbn);
+                    continue;
+                }
                 try
                 {
                     var formattedBook = new Book
