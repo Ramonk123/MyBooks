@@ -1,6 +1,6 @@
 @model MyBooks.Models.Overview.SearchVM
 
-<div class="container search-container w-100 d-flex justify-content-center align-items-center flex-column mt-5">
+<div class="container search-container w-100 d-flex justify-content-center align-items-center flex-column mt-5 align-self-center">
     <h2 class="mb-4 text-center">Find Your Next Favorite Book</h2>
     <div class="input-group mb-3 w-75">
         <input type="text" id="searchInput" list="bookTitles" class="form-control"/>
@@ -15,6 +15,7 @@
         padding: 2rem;
         border-radius: 0.75rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        align-self: center; !important;
     }
 
     .search-container h2 {
