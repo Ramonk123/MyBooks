@@ -29,6 +29,7 @@ public class RatingQueryService
 
     public int GetRatingVM(int id)
     {
+        
         var rating = GetRating(id);
         
         if (double.IsNaN(rating))
