@@ -1,8 +1,10 @@
 using Data.Data;
+using Data.Data.Enums;
 using Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyBooks.Config;
 using MyBooks.Models.Account;
 using MyBooks.Services;
@@ -74,7 +76,10 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            await _checkForDefaultLibrariesPresent(user.Id);
+            
             HttpContext.Session.SetString("UserSession", "active");
+            
             return RedirectToAction("Index", "Overview");
         }
 
@@ -158,6 +163,48 @@ public class AccountController : Controller
         HttpContext.Session.Clear();
 
         return RedirectToAction("Login", "Account");
+    }
+
+
+    private async Task _checkForDefaultLibrariesPresent(string userId)
+    {
+        var defaultLibraries = new List<LibraryType>()
+        {
+            LibraryType.DefaultLibrary, 
+            LibraryType.WishToRead,
+            LibraryType.Read, LibraryType.Unread
+        };
+        
+        var userLibraries = await _context.Libraries
+            .Where(l => l.UserId == userId && l.Type != LibraryType.Custom)
+            .Select(l => l.Type)
+            .ToListAsync();
+        
+        var missingLibraries = defaultLibraries.Except(userLibraries).ToList();
+        
+        foreach (var type in missingLibraries)
+        {
+            var libraries = new List<Library>();
+            
+            switch (type)
+            {
+                case LibraryType.Read:
+                    libraries.Add(Library._createReadLibrary(userId));
+                    break;
+                case LibraryType.WishToRead:
+                    libraries.Add(Library._createWishToReadLibrary(userId));
+                    break;
+                case LibraryType.Unread:
+                    libraries.Add(Library._createUnreadLibrary(userId));
+                    break;
+                case LibraryType.DefaultLibrary:
+                    libraries.Add(Library._createDefaultLibrary(userId));
+                    break;
+            }
+            
+            _context.Libraries.AddRange(libraries);
+            await _context.SaveChangesAsync();
+        }
     }
     
     

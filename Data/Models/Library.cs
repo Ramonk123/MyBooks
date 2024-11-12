@@ -17,30 +17,59 @@ public class Library
     {
         return new List<Library>()
         {
-            new Library
-            {
-                PublicId = Guid.NewGuid(),
-                Name = "My Books",
-                Type = LibraryType.DefaultLibrary,
-                User = user,
-                Books = new List<Book>()
-            },
-            new Library
-            {
-                PublicId = Guid.NewGuid(),
-                Name = "Wish To Read",
-                Type = LibraryType.WishToRead,
-                User = user,
-                Books = new List<Book>()
-            },
-            new Library
-            {
-                PublicId = Guid.NewGuid(),
-                Name = "Read",
-                Type = LibraryType.Read,
-                User = user,
-                Books = new List<Book>()
-            }
+            _createDefaultLibrary(user.Id),
+            _createUnreadLibrary(user.Id),
+            _createWishToReadLibrary(user.Id),
+            _createReadLibrary(user.Id)
+           ,
+           
+        };
+    }
+
+    public static Library _createDefaultLibrary(string userId)
+    {
+        return new Library
+        {
+            PublicId = Guid.NewGuid(),
+            Name = "My Books",
+            Type = LibraryType.DefaultLibrary,
+            UserId = userId,
+            Books = new List<Book>()
+        };
+    }
+    public static Library _createUnreadLibrary(string userId)
+    {
+        return new Library
+        {
+            PublicId = Guid.NewGuid(),
+            Name = "Unread",
+            Type = LibraryType.Unread,
+            UserId = userId,
+            Books = new List<Book>()
+        };
+    }
+
+    public static Library _createReadLibrary(string userId)
+    {
+        return new Library
+        {
+            PublicId = Guid.NewGuid(),
+            Name = "Read",
+            Type = LibraryType.Read,
+            UserId = userId,
+            Books = new List<Book>()
+        };
+    }
+
+    public static Library _createWishToReadLibrary(string userId)
+    {
+        return new Library
+        {
+            PublicId = Guid.NewGuid(),
+            Name = "Wish To Read",
+            Type = LibraryType.WishToRead,
+            UserId = userId,
+            Books = new List<Book>()
         };
     }
 }

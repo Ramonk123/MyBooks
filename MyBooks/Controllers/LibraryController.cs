@@ -72,13 +72,29 @@ public class LibraryController : Controller
 
     public async Task<IActionResult> GetLibrary(Guid id)
     {
+        var userId = _userManager.GetUserId(User);
+
+        if (userId == null)
+        {
+            return BadRequest();
+        }
+
         var library = await _context.Libraries.WherePublicIdIs(id)
+            .WhereUserIs(userId)
             .Select(l => new LibraryVM
             {
                 LibraryId = l.PublicId,
                 Name = l.Name,
                 Type = l.Type,
-                Books = l.LibraryBooks.Select(lb => new LibraryBookVM
+            })
+            .SingleAsync();
+
+        if (library.Type == LibraryType.Read || library.Type == LibraryType.Unread)
+        {
+            var books = await _context.LibraryBooks
+                .Where(lb => lb.UserId == userId && lb.Library.Type == LibraryType.DefaultLibrary)
+                .Where(lb => lb.Status == (library.Type == LibraryType.Read? BookStatus.Read : BookStatus.Unread))
+                .Select(lb => new LibraryBookVM
                 {
                     BookId = lb.Book.PublicId,
                     AuthorId = lb.Book.Author.PublicId,
@@ -86,9 +102,27 @@ public class LibraryController : Controller
                     Author = lb.Book.Author.Name,
                     Status = lb.Status.ToString(),
                     ThumbnailURL = lb.Book.ThumbnailURL
-                }).ToList()
-            })
-            .SingleAsync();
+                })
+                .ToListAsync();
+            
+            library.Books = books; 
+        }
+        else
+        {
+            var books = await _context.LibraryBooks
+                .Where(lb => lb.UserId == userId && lb.Library.PublicId == library.LibraryId)
+                .Select(lb => new LibraryBookVM
+                {
+                    BookId = lb.Book.PublicId,
+                    AuthorId = lb.Book.Author.PublicId,
+                    Title = lb.Book.Title,
+                    Author = lb.Book.Author.Name,
+                    Status = lb.Status.ToString(),
+                    ThumbnailURL = lb.Book.ThumbnailURL
+                })
+                .ToListAsync();
+            library.Books = books;
+        }
 
         return PartialView("Partials/_LibraryBooksPartial", library);
     }
